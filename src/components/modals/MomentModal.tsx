@@ -40,7 +40,7 @@ export default function MomentModal({
       <div className="p-modal-box">
         <div className="p-modal-top">
           <button className="p-modal-close" onClick={onClose}>
-            ×
+            +
           </button>
           <div className="p-modal-eyebrow">guardar momento</div>
           <div className="p-modal-title">o que ficou com você?</div>

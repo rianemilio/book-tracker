@@ -29,7 +29,7 @@ export default function ConnectionModal({
       <div className="p-modal-box">
         <div className="p-modal-top">
           <button className="p-modal-close" onClick={onClose}>
-            ×
+            +
           </button>
           <div className="p-modal-eyebrow">vincular ideias</div>
           <div className="p-modal-title">Nova Conexão</div>

@@ -43,7 +43,7 @@ export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
       <div className="p-modal-box">
         <div className="p-modal-top">
           <button className="p-modal-close" onClick={onClose}>
-            ×
+            +
           </button>
           <div className="p-modal-eyebrow">registrar sessão</div>
           <div className="p-modal-title">como você está agora?</div>

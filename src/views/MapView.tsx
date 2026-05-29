@@ -223,7 +223,7 @@ export default function MapView({
                           className="p-conn-tag"
                           style={{ background: TC[otherItem.type] }}
                         >
-                          {otherItem.title} — {c.reason}
+                          {otherItem.title} - {c.reason}
                           <button
                             className="p-del-conn"
                             title="Excluir conexão"

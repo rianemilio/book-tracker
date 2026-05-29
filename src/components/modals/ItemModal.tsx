@@ -42,7 +42,7 @@ export default function ItemModal({
       <div className="p-modal-box">
         <div className="p-modal-top">
           <button className="p-modal-close" onClick={onClose}>
-            ×
+            +
           </button>
           <div className="p-modal-eyebrow">
             {item ? "modificar" : "adicionar à estante"}

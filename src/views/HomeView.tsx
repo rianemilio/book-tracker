@@ -231,7 +231,7 @@ export default function HomeView({
               textTransform: "uppercase",
             }}
           >
-            ver todos →
+            ver todos
           </button>
         }
       >
