@@ -1,0 +1,1885 @@
+
+
+==================== FILE: App.tsx ====================
+
+import React, { useState, useEffect } from "react";
+import "./App.css";
+
+import type { MediaItem, Moment, Connection, Session } from "./types";
+import {
+  INK,
+  INIT_ITEMS,
+  INIT_MOMENTS,
+  INIT_CONNS,
+  INIT_SESSIONS,
+} from "./constants";
+
+// Importação das Views
+import HomeView from "./views/HomeView";
+import MapView from "./views/MapView";
+import MomentsView from "./views/MomentsView";
+
+// Importação dos Modais
+import MoodModal from "./components/modals/MoodModal";
+import MomentModal from "./components/modals/MomentModal";
+import ItemModal from "./components/modals/ItemModal";
+
+export default function App() {
+  const [tab, setTab] = useState<"home" | "map" | "moments">("home");
+
+  const [items, setItems] = useState<MediaItem[]>(() => {
+    const saved = localStorage.getItem("paginas_cenas_items");
+    return saved ? JSON.parse(saved) : INIT_ITEMS;
+  });
+
+  const [moments, setMoments] = useState<Moment[]>(() => {
+    const saved = localStorage.getItem("paginas_cenas_moments");
+    return saved ? JSON.parse(saved) : INIT_MOMENTS;
+  });
+
+  const [sessions, setSessions] = useState<Session[]>(() => {
+    const saved = localStorage.getItem("paginas_cenas_sessions");
+    return saved ? JSON.parse(saved) : INIT_SESSIONS;
+  });
+
+  const [connections, setConnections] = useState<Connection[]>(() => {
+    const saved = localStorage.getItem("paginas_cenas_connections");
+    return saved ? JSON.parse(saved) : INIT_CONNS;
+  });
+
+  const [showMood, setShowMood] = useState(false);
+  const [showMoment, setShowMoment] = useState(false);
+  const [editingItem, setEditingItem] = useState<MediaItem | null>(null);
+  const [showNewItem, setShowNewItem] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("paginas_cenas_items", JSON.stringify(items));
+  }, [items]);
+
+  useEffect(() => {
+    localStorage.setItem("paginas_cenas_moments", JSON.stringify(moments));
+  }, [moments]);
+
+  useEffect(() => {
+    localStorage.setItem("paginas_cenas_sessions", JSON.stringify(sessions));
+  }, [sessions]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "paginas_cenas_connections",
+      JSON.stringify(connections),
+    );
+  }, [connections]);
+
+  const handleQuickProgress = (id: number, delta: number) => {
+    setItems((prev) =>
+      prev.map((item) => {
+        if (item.id === id) {
+          const nextProg = Math.min(
+            item.total,
+            Math.max(0, item.progress + delta),
+          );
+          const autoStatus = nextProg === item.total ? "done" : "reading";
+          return { ...item, progress: nextProg, status: autoStatus };
+        }
+        return item;
+      }),
+    );
+  };
+
+  const handleSaveItem = (data: Omit<MediaItem, "id"> & { id?: number }) => {
+    if (data.id) {
+      setItems((prev) =>
+        prev.map((item) =>
+          item.id === data.id ? ({ ...item, ...data } as MediaItem) : item,
+        ),
+      );
+    } else {
+      const newItem: MediaItem = { ...data, id: Date.now() } as MediaItem;
+      setItems((prev) => [...prev, newItem]);
+    }
+    setEditingItem(null);
+    setShowNewItem(false);
+  };
+
+  const handleDeleteItem = (id: number) => {
+    setItems((prev) => prev.filter((item) => item.id !== id));
+    setMoments((prev) => prev.filter((m) => m.itemId !== id));
+    setConnections((prev) =>
+      prev.filter((c) => c.fromId !== id && c.toId !== id),
+    );
+    setEditingItem(null);
+  };
+
+  const handleAddConnection = (data: {
+    fromId: number;
+    toId: number;
+    reason: string;
+  }) => {
+    const newConn: Connection = { ...data, id: `c-${Date.now()}` };
+    setConnections((prev) => [...prev, newConn]);
+  };
+
+  const handleDeleteConnection = (id: string) => {
+    setConnections((prev) => prev.filter((c) => c.id !== id));
+  };
+
+  const handleDeleteMoment = (id: number) => {
+    setMoments((prev) => prev.filter((m) => m.id !== id));
+  };
+
+  const handleSaveSession = (data: {
+    itemId: number;
+    mood: string;
+    ctx: string;
+    note: string;
+    sym?: string;
+    newProgress?: number;
+  }) => {
+    const { itemId, mood, ctx, note, sym, newProgress } = data;
+
+    setSessions((prev) => [
+      ...prev,
+      { id: Date.now(), itemId, mood, ctx, note, sym: sym || "○" },
+    ]);
+
+    if (newProgress !== undefined) {
+      setItems((prev) =>
+        prev.map((item) => {
+          if (item.id === itemId) {
+            const autoStatus = newProgress === item.total ? "done" : "reading";
+            return { ...item, progress: newProgress, status: autoStatus };
+          }
+          return item;
+        }),
+      );
+    }
+    setShowMood(false);
+  };
+
+  return (
+    <>
+      {showMood && items.length > 0 && (
+        <MoodModal
+          items={items}
+          onSave={handleSaveSession}
+          onClose={() => setShowMood(false)}
+        />
+      )}
+
+      {showMoment && items.length > 0 && (
+        <MomentModal
+          items={items}
+          onSave={(d) => {
+            setMoments((p) => [
+              { id: Date.now(), ...d, sym: d.sym || "★" },
+              ...p,
+            ]);
+            setShowMoment(false);
+          }}
+          onClose={() => setShowMoment(false)}
+        />
+      )}
+
+      {(showNewItem || editingItem) && (
+        <ItemModal
+          item={editingItem}
+          onSave={handleSaveItem}
+          onDelete={handleDeleteItem}
+          onClose={() => {
+            setEditingItem(null);
+            setShowNewItem(false);
+          }}
+        />
+      )}
+
+      <div className="p-header-container">
+        <div className="p-header">
+          <div>
+            <div className="p-logo">Páginas & Cenas</div>
+            <div className="p-logo-sub">seu universo de histórias</div>
+          </div>
+          <div className="p-header-actions">
+            <button
+              className="p-reg-btn secondary"
+              onClick={() => setShowNewItem(true)}
+            >
+              + Nova Obra
+            </button>
+            <button
+              className="p-reg-btn"
+              disabled={items.length === 0}
+              onClick={() => setShowMood(true)}
+            >
+              + Registrar Sessão
+            </button>
+          </div>
+        </div>
+        <div className="p-header-drips">
+          <svg
+            viewBox="0 0 1440 24"
+            preserveAspectRatio="none"
+            style={{
+              display: "block",
+              width: "100%",
+              height: "24px",
+              fill: INK,
+            }}
+          >
+            <path d="M0,0 L1440,0 L1440,6 Q1420,18 1400,6 Q1380,2 1360,14 Q1320,24 1290,10 Q1250,2 1220,18 Q1180,22 1150,10 Q1100,0 1060,14 Q1020,24 980,10 Q950,2 920,18 Q880,22 850,10 Q800,0 760,14 Q720,24 680,10 Q650,2 620,18 Q580,22 550,10 Q500,0 460,14 Q420,24 380,10 Q350,2 320,18 Q280,22 250,10 Q200,0 160,14 Q120,24 80,10 Q50,2 20,18 L0,8 Z" />
+          </svg>
+        </div>
+      </div>
+
+      <div className="p-nav">
+        {(
+          [
+            ["home", "início"],
+            ["map", "mapa"],
+            ["moments", "momentos"],
+          ] as const
+        ).map(([k, l]) => (
+          <button
+            key={k}
+            className={`p-nav-btn${tab === k ? " active" : ""}`}
+            onClick={() => setTab(k)}
+          >
+            {l}
+          </button>
+        ))}
+      </div>
+
+      <div className="p-body">
+        {tab === "home" && (
+          <HomeView
+            items={items}
+            moments={moments}
+            sessions={sessions}
+            onTabMoments={() => setTab("moments")}
+            onEditItem={setEditingItem}
+            onQuickProgress={handleQuickProgress}
+          />
+        )}
+        {tab === "map" && (
+          <MapView
+            items={items}
+            moments={moments}
+            connections={connections}
+            onAddConnection={handleAddConnection}
+            onDeleteConnection={handleDeleteConnection}
+          />
+        )}
+        {tab === "moments" && (
+          <MomentsView
+            items={items}
+            moments={moments}
+            onAdd={() => setShowMoment(true)}
+            onDeleteMoment={handleDeleteMoment}
+          />
+        )}
+      </div>
+    </>
+  );
+}
+
+
+==================== FILE: constants.ts ====================
+
+import type {
+  MediaItem,
+  Moment,
+  Connection,
+  Session,
+  Mood,
+  MediaType,
+} from "./types";
+
+export const INK = "#0E0C0A";
+export const PAPER = "#F4EFE6";
+export const PAPER2 = "#EDE7D9";
+export const PAPER3 = "#C9C0AE";
+export const MUTED = "#6B6358";
+export const FAINT = "#A89F90";
+
+export const TC: Record<MediaType, string> = {
+  book: "#1A3A5C",
+  film: "#8B1A1A",
+  manga: "#2D5A27",
+};
+
+export const TL: Record<MediaType, string> = {
+  book: "livro",
+  film: "filme/série",
+  manga: "mangá/HQ",
+};
+
+export const MOODS: Mood[] = [
+  { k: "calmo", s: "○" },
+  { k: "melancólico", s: "◑" },
+  { k: "agitado", s: "◉" },
+  { k: "cansado", s: "◌" },
+  { k: "inspirado", s: "★" },
+];
+
+export const CTXS: string[] = [
+  "em casa, à noite",
+  "no metrô",
+  "café / pausa",
+  "de manhã",
+  "fim de semana",
+];
+
+export const TAGS: string[] = [
+  "me fez chorar",
+  "ficou na cabeça",
+  "reli 3×",
+  "precisei parar",
+  "perturbador",
+  "me deixou em paz",
+];
+
+export const INIT_ITEMS: MediaItem[] = [
+  {
+    id: 1,
+    title: "Berserk",
+    creator: "Kentaro Miura",
+    type: "manga",
+    status: "reading",
+    progress: 305,
+    total: 364,
+    unit: "cap.",
+  },
+  {
+    id: 2,
+    title: "O Senhor dos Anéis",
+    creator: "J.R.R. Tolkien",
+    type: "book",
+    status: "reading",
+    progress: 248,
+    total: 400,
+    unit: "pág.",
+  },
+  {
+    id: 3,
+    title: "Rashomon",
+    creator: "Akira Kurosawa",
+    type: "film",
+    status: "done",
+    progress: 88,
+    total: 88,
+    unit: "min",
+  },
+  {
+    id: 4,
+    title: "Kafka à Beira-Mar",
+    creator: "Haruki Murakami",
+    type: "book",
+    status: "reading",
+    progress: 187,
+    total: 386,
+    unit: "pág.",
+  },
+  {
+    id: 5,
+    title: "Vinland Saga",
+    creator: "Makoto Yukimura",
+    type: "manga",
+    status: "reading",
+    progress: 120,
+    total: 200,
+    unit: "cap.",
+  },
+  {
+    id: 6,
+    title: "Succession",
+    creator: "Jesse Armstrong",
+    type: "film",
+    status: "reading",
+    progress: 2,
+    total: 4,
+    unit: "temp.",
+  },
+];
+
+export const INIT_MOMENTS: Moment[] = [
+  {
+    id: 101,
+    itemId: 1,
+    ref: "cap. 159",
+    text: "A cena de Doldrey. Griffith entregando tudo por um sonho e Guts percebendo que nunca foi suficiente.",
+    mood: "melancólico",
+    sym: "◑",
+    ctx: "meia-noite, em casa",
+    tag: "me fez chorar",
+  },
+  {
+    id: 102,
+    itemId: 3,
+    ref: "cena final",
+    text: "O lenhador pega o bebê. Depois de tudo que o filme fez questionar sobre a humanidade, esse gesto simples te devolve o ar.",
+    mood: "calmo",
+    sym: "○",
+    ctx: "tarde de domingo",
+    tag: "ficou na cabeça",
+  },
+  {
+    id: 103,
+    itemId: 4,
+    ref: "p. 187",
+    text: "A tempestade não é algo que você atravessa. Você é a tempestade.",
+    mood: "inspirado",
+    sym: "★",
+    ctx: "no metrô",
+    tag: "reli 3×",
+  },
+];
+
+export const INIT_CONNS: Connection[] = [
+  { id: "c1", fromId: 1, toId: 3, reason: "ambiguidade moral extrema" },
+  {
+    id: "c2",
+    fromId: 1,
+    toId: 5,
+    reason: "guerra, trauma e estética histórica",
+  },
+  { id: "c3", fromId: 2, toId: 5, reason: "jornada épica medieval" },
+  { id: "c4", fromId: 4, toId: 1, reason: "existencialismo e niilismo" },
+];
+
+export const INIT_SESSIONS: Session[] = [
+  {
+    id: 201,
+    itemId: 1,
+    mood: "melancólico",
+    sym: "◑",
+    ctx: "em casa, à noite",
+    note: "Lendo capítulos pesados hoje.",
+  },
+];
+
+
+==================== FILE: views/MapView.tsx ====================
+
+import React, { useState } from "react";
+import type { MediaItem, Moment, Connection } from "../types";
+import { TC, INK, PAPER, MUTED } from "../constants";
+import { Badge } from "../components/ui/UIHelpers";
+import ConnectionModal from "../components/modals/ConnectionModal";
+
+interface MapViewProps {
+  items: MediaItem[];
+  moments: Moment[];
+  connections: Connection[];
+  onAddConnection: (data: {
+    fromId: number;
+    toId: number;
+    reason: string;
+  }) => void;
+  onDeleteConnection: (id: string) => void;
+}
+
+interface MapNode extends MediaItem {
+  x: number;
+  y: number;
+}
+
+export default function MapView({
+  items,
+  moments,
+  connections,
+  onAddConnection,
+  onDeleteConnection,
+}: MapViewProps) {
+  const [sel, setSel] = useState<MediaItem | undefined>(items[0]);
+  const [showConnModal, setShowConnModal] = useState(false);
+
+  const cx = 290,
+    cy = 148,
+    r = 108;
+
+  const nodes: MapNode[] = items.slice(0, 8).map((item, i) => {
+    const totalNodes = Math.min(items.length, 8);
+    const a = (2 * Math.PI * i) / totalNodes - Math.PI / 2;
+    return {
+      ...item,
+      x: Math.round(cx + r * Math.cos(a)),
+      y: Math.round(cy + r * Math.sin(a)),
+    };
+  });
+
+  const activeNodeIds = nodes.map((n) => n.id);
+  const relevantConns = connections.filter(
+    (c) => activeNodeIds.includes(c.fromId) && activeNodeIds.includes(c.toId),
+  );
+  const mmt = sel ? moments.find((m) => m.itemId === sel.id) : undefined;
+
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <div className="p-section-head" style={{ margin: 0, flex: 1 }}>
+          <span className="p-section-label">mapa de conexões</span>
+          <div className="p-section-line" />
+        </div>
+        <button
+          className="p-ghost-btn"
+          onClick={() => setShowConnModal(true)}
+          style={{ marginLeft: 14 }}
+        >
+          + Vincular ideias
+        </button>
+      </div>
+
+      {showConnModal && (
+        <ConnectionModal
+          items={items}
+          onClose={() => setShowConnModal(false)}
+          onSave={(data) => {
+            onAddConnection(data);
+            setShowConnModal(false);
+          }}
+        />
+      )}
+
+      {items.length === 0 ? (
+        <div className="p-drip-add" style={{ cursor: "default" }}>
+          Adicione obras à sua estante para começar a mapear paralelos.
+        </div>
+      ) : (
+        <>
+          <div className="p-map-bg">
+            <svg
+              viewBox="0 0 580 296"
+              style={{ width: "100%", display: "block" }}
+            >
+              {/* Linhas de Conexões de Assuntos */}
+              {relevantConns.map((conn) => {
+                const nodeA = nodes.find((n) => n.id === conn.fromId);
+                const nodeB = nodes.find((n) => n.id === conn.toId);
+                if (!nodeA || !nodeB) return null;
+                const active =
+                  sel && (sel.id === nodeA.id || sel.id === nodeB.id);
+                return (
+                  <line
+                    key={conn.id}
+                    x1={nodeA.x}
+                    y1={nodeA.y}
+                    x2={nodeB.x}
+                    y2={nodeB.y}
+                    stroke={active ? "#8B1A1A" : INK}
+                    strokeWidth={active ? 3 : 1}
+                    opacity={active ? 0.9 : 0.2}
+                    strokeDasharray={active ? "" : "3 3"}
+                  />
+                );
+              })}
+
+              {/* Raios centralizadores */}
+              {nodes.map((n) => (
+                <line
+                  key={`v-${n.id}`}
+                  x1={cx}
+                  y1={cy}
+                  x2={n.x}
+                  y2={n.y}
+                  stroke={sel?.id === n.id ? TC[n.type] : INK}
+                  strokeWidth={sel?.id === n.id ? 2 : 0.5}
+                  opacity={sel?.id === n.id ? 0.8 : 0.15}
+                  strokeDasharray="4 4"
+                />
+              ))}
+
+              {/* Formas orgânicas dos nós */}
+              {nodes.map((n) => {
+                const active = sel?.id === n.id;
+                const c = TC[n.type];
+                const lbl =
+                  n.title.length > 11 ? n.title.slice(0, 10) + "…" : n.title;
+                return (
+                  <g
+                    key={n.id}
+                    onClick={() => setSel(n)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <path
+                      d={`
+                      M ${n.x - 38},${n.y - 10} 
+                      C ${n.x - 22},${n.y - 22} ${n.x + 22},${n.y - 18} ${n.x + 38},${n.y - 10} 
+                      C ${n.x + 44},${n.y - 2} ${n.x + 42},${n.y + 10} ${n.x + 32},${n.y + 15} 
+                      C ${n.x + 18},${n.y + 18} ${n.x - 18},${n.y + 16} ${n.x - 32},${n.y + 14} 
+                      C ${n.x - 44},${n.y + 6} ${n.x - 42},${n.y - 4} ${n.x - 38},${n.y - 10} Z
+                    `}
+                      fill={active ? c : PAPER}
+                      stroke={INK}
+                      strokeWidth={active ? 3 : 1.5}
+                    />
+                    <text
+                      x={n.x}
+                      y={n.y + 4}
+                      textAnchor="middle"
+                      fontSize={9}
+                      fontFamily="'Helvetica Neue',Arial,sans-serif"
+                      letterSpacing=".04em"
+                      fill={active ? PAPER : INK}
+                      fontWeight={900}
+                    >
+                      {lbl}
+                    </text>
+                  </g>
+                );
+              })}
+
+              {/* Centro do Grafo */}
+              <path
+                d={`
+                M ${cx - 24},${cy - 8} 
+                C ${cx - 15},${cy - 18} ${cx + 15},${cy - 16} ${cx + 24},${cy - 8} 
+                C ${cx + 28},${cy - 2} ${cx + 26},${cy + 10} ${cx + 18},${cy + 14} 
+                C ${cx + 10},${cy + 16} ${cx - 10},${cy + 14} ${cx - 18},${cy + 12} 
+                C ${cx - 26},${cy + 6} ${cx - 28},${cy - 4} ${cx - 24},${cy - 8} Z
+              `}
+                fill={INK}
+              />
+              <text
+                x={cx}
+                y={cy + 4}
+                textAnchor="middle"
+                fontSize={9}
+                fontFamily="'Helvetica Neue',Arial,sans-serif"
+                fill={PAPER}
+                letterSpacing=".12em"
+                fontWeight={900}
+              >
+                você
+              </text>
+            </svg>
+          </div>
+
+          {sel && (
+            <div className="p-conn-card" style={{ color: TC[sel.type] }}>
+              <div style={{ flex: 1, paddingLeft: 6 }}>
+                <Badge type={sel.type} />
+                <div className="p-conn-title">{sel.title}</div>
+                <div className="p-conn-author">{sel.creator}</div>
+                <div className="p-field-label" style={{ marginBottom: 10 }}>
+                  Conexões Ativas
+                </div>
+                <div className="p-conn-tags">
+                  {connections
+                    .filter((c) => c.fromId === sel.id || c.toId === sel.id)
+                    .map((c) => {
+                      const otherItem = items.find(
+                        (i) =>
+                          i.id === (c.fromId === sel.id ? c.toId : c.fromId),
+                      );
+                      if (!otherItem) return null;
+                      return (
+                        <span
+                          key={c.id}
+                          className="p-conn-tag"
+                          style={{ background: TC[otherItem.type] }}
+                        >
+                          {otherItem.title} — {c.reason}
+                          <button
+                            className="p-del-conn"
+                            title="Excluir conexão"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onDeleteConnection(c.id);
+                            }}
+                          >
+                            ×
+                          </button>
+                        </span>
+                      );
+                    })}
+                  {connections.filter(
+                    (c) => c.fromId === sel.id || c.toId === sel.id,
+                  ).length === 0 && (
+                    <span
+                      style={{
+                        color: MUTED,
+                        fontSize: "12px",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      Nenhuma conexão temática cadastrada para esta obra.
+                    </span>
+                  )}
+                </div>
+                {mmt && (
+                  <div
+                    style={{
+                      paddingTop: 14,
+                      borderTop: `2px dashed ${INK}`,
+                      marginTop: 14,
+                    }}
+                  >
+                    <div className="p-field-label" style={{ marginBottom: 6 }}>
+                      Momento de destaque
+                    </div>
+                    <div
+                      style={{
+                        fontStyle: "italic",
+                        fontSize: 13,
+                        lineHeight: 1.75,
+                        color: INK,
+                        fontFamily: "Georgia,serif",
+                      }}
+                    >
+                      "{mmt.text}"
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+
+==================== FILE: views/MomentsView.tsx ====================
+
+import React from "react";
+import type { MediaItem, Moment } from "../types";
+import { TC, INK } from "../constants";
+import { Badge, Pill } from "../components/ui/UIHelpers";
+
+interface MomentsViewProps {
+  items: MediaItem[];
+  moments: Moment[];
+  onAdd: () => void;
+  onDeleteMoment: (id: number) => void;
+}
+
+export default function MomentsView({
+  items,
+  moments,
+  onAdd,
+  onDeleteMoment,
+}: MomentsViewProps) {
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <div className="p-section-head" style={{ margin: 0, flex: 1 }}>
+          <span className="p-section-label">momentos guardados</span>
+          <div className="p-section-line" />
+        </div>
+        <button
+          className="p-ghost-btn"
+          onClick={onAdd}
+          style={{ marginLeft: 14, flexShrink: 0 }}
+        >
+          + guardar
+        </button>
+      </div>
+
+      {moments.length === 0 ? (
+        <div className="p-drip-add" onClick={onAdd}>
+          + Você ainda não guardou momentos. Clique para catalogar o primeiro.
+        </div>
+      ) : (
+        moments.map((m) => {
+          const item = items.find((i) => i.id === m.itemId);
+          if (!item) return null;
+          const c = TC[item.type];
+          return (
+            <div key={m.id} className="p-moment-card" style={{ color: c }}>
+              <div className="p-moment-inner">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 10,
+                  }}
+                >
+                  <Badge type={item.type} />
+                  <span
+                    style={{
+                      fontWeight: 900,
+                      fontStyle: "italic",
+                      fontSize: 16,
+                      color: INK,
+                      fontFamily: "Georgia,serif",
+                    }}
+                  >
+                    {item.title}
+                  </span>
+                  <span className="p-meta-txt">· {m.ref}</span>
+                  <button
+                    className="p-ctrl-edit"
+                    style={{ marginLeft: "auto", textDecoration: "none" }}
+                    onClick={() => onDeleteMoment(m.id)}
+                  >
+                    excluir
+                  </button>
+                </div>
+                <div
+                  className="p-quote-text"
+                  style={{ borderLeft: `3px solid ${INK}` }}
+                >
+                  "{m.text}"
+                </div>
+                <div className="p-moment-meta">
+                  <span className="p-meta-sym" style={{ color: INK }}>
+                    {m.sym}
+                  </span>
+                  <span className="p-meta-txt" style={{ color: INK }}>
+                    {m.mood} · {m.ctx}
+                  </span>
+                  <Pill bg={c}>{m.tag}</Pill>
+                </div>
+              </div>
+            </div>
+          );
+        })
+      )}
+      {moments.length > 0 && (
+        <div className="p-drip-add" onClick={onAdd}>
+          + guardar um momento que ficou com você
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+==================== FILE: views/HomeView.tsx ====================
+
+import React, { useState } from "react";
+import type { MediaItem, Moment, Session, MediaType } from "../types";
+import { TC, INK, PAPER, MUTED } from "../constants";
+import { Badge, Pill, SectionHead } from "../components/ui/UIHelpers";
+
+interface HomeViewProps {
+  items: MediaItem[];
+  moments: Moment[];
+  sessions: Session[];
+  onTabMoments: () => void;
+  onEditItem: (item: MediaItem) => void;
+  onQuickProgress: (id: number, delta: number) => void;
+}
+
+type FilterType = "all" | MediaType;
+
+export default function HomeView({
+  items,
+  moments,
+  sessions,
+  onTabMoments,
+  onEditItem,
+  onQuickProgress,
+}: HomeViewProps) {
+  const [filter, setFilter] = useState<FilterType>("all");
+  const reading = items.filter((i) => i.status === "reading");
+  const filtered =
+    filter === "all" ? reading : reading.filter((i) => i.type === filter);
+
+  const cnt = {
+    book: items.filter((i) => i.type === "book").length,
+    film: items.filter((i) => i.type === "film").length,
+    manga: items.filter((i) => i.type === "manga").length,
+  };
+
+  const last = sessions[sessions.length - 1];
+
+  return (
+    <div>
+      <div className="p-stat-grid">
+        {[
+          ["livros", cnt.book, TC.book],
+          ["filmes & séries", cnt.film, TC.film],
+          ["mangás & HQs", cnt.manga, TC.manga],
+        ].map(([lbl, val, c]) => (
+          <div
+            key={String(lbl)}
+            className="p-stat-card"
+            style={{ color: String(c) }}
+          >
+            <div className="p-stat-label">{String(lbl)}</div>
+            <div className="p-stat-num" style={{ color: INK }}>
+              {Number(val)}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {last && (
+        <div className="p-insight-bar">
+          <span
+            style={{
+              fontSize: 24,
+              fontFamily: "'Courier New',monospace",
+              flexShrink: 0,
+              fontWeight: "bold",
+            }}
+          >
+            {last.sym}
+          </span>
+          <div>
+            <div
+              style={{
+                fontSize: 10,
+                opacity: 0.7,
+                letterSpacing: ".14em",
+                textTransform: "uppercase",
+                marginBottom: 3,
+                fontWeight: "900",
+              }}
+            >
+              última sessão
+            </div>
+            <div
+              style={{
+                fontStyle: "italic",
+                fontSize: 15,
+                fontFamily: "Georgia,serif",
+                fontWeight: "700",
+              }}
+            >
+              {items.find((i) => i.id === last.itemId)?.title || "Obra"} ·{" "}
+              {last.mood} · {last.ctx}
+              {last.note && (
+                <span
+                  style={{
+                    display: "block",
+                    fontSize: "12px",
+                    fontStyle: "normal",
+                    fontWeight: "normal",
+                    opacity: 0.9,
+                    fontFamily: "sans-serif",
+                    marginTop: "4px",
+                  }}
+                >
+                  "{last.note}"
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <SectionHead
+        extra={
+          <div className="p-filter-row">
+            {(
+              [
+                ["all", "todos"],
+                ["book", "livros"],
+                ["film", "filmes"],
+                ["manga", "mangás"],
+              ] as [FilterType, string][]
+            ).map(([k, l]) => (
+              <button
+                key={k}
+                className="p-filter-btn"
+                onClick={() => setFilter(k)}
+                style={{
+                  background: filter === k ? INK : "transparent",
+                  color: filter === k ? PAPER : MUTED,
+                }}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
+        }
+      >
+        em andamento
+      </SectionHead>
+
+      {filtered.length === 0 ? (
+        <div
+          className="p-drip-add"
+          style={{ cursor: "default", marginBottom: "2.5rem" }}
+        >
+          Nenhuma história em andamento nessa categoria.
+        </div>
+      ) : (
+        <div className="p-item-grid">
+          {filtered.map((item) => {
+            const pct = Math.round((item.progress / item.total) * 100) || 0;
+            const c = TC[item.type];
+            return (
+              <div key={item.id} className="p-item-card" style={{ color: c }}>
+                <Badge type={item.type} />
+                <div className="p-item-title">{item.title}</div>
+                <div className="p-item-author">{item.creator}</div>
+                <div className="p-prog-pct" style={{ color: INK }}>
+                  <span>
+                    {item.progress} de {item.total} {item.unit}
+                  </span>
+                </div>
+                <div className="p-prog-track">
+                  <div
+                    className="p-prog-fill"
+                    style={{ width: `${Math.min(100, pct)}%`, background: c }}
+                  />
+                </div>
+                <div className="p-prog-pct" style={{ color: c }}>
+                  <span>{pct}%</span>
+                </div>
+
+                <div className="p-item-controls">
+                  <button
+                    className="p-ctrl-btn"
+                    title="-10"
+                    onClick={() => onQuickProgress(item.id, -10)}
+                  >
+                    -10
+                  </button>
+                  <button
+                    className="p-ctrl-btn"
+                    title="-1"
+                    onClick={() => onQuickProgress(item.id, -1)}
+                  >
+                    -
+                  </button>
+                  <button
+                    className="p-ctrl-btn"
+                    title="+1"
+                    onClick={() => onQuickProgress(item.id, 1)}
+                  >
+                    +
+                  </button>
+                  <button
+                    className="p-ctrl-btn"
+                    title="+10"
+                    onClick={() => onQuickProgress(item.id, 10)}
+                  >
+                    +10
+                  </button>
+                  <button
+                    className="p-ctrl-edit"
+                    onClick={() => onEditItem(item)}
+                  >
+                    ajustar
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <SectionHead
+        extra={
+          <button
+            onClick={onTabMoments}
+            style={{
+              flexShrink: 0,
+              marginLeft: 10,
+              background: "none",
+              border: "none",
+              color: INK,
+              cursor: "pointer",
+              fontSize: 10,
+              fontWeight: 900,
+              letterSpacing: ".14em",
+              textTransform: "uppercase",
+            }}
+          >
+            ver todos →
+          </button>
+        }
+      >
+        momentos recentes
+      </SectionHead>
+
+      {moments.length === 0 ? (
+        <div className="p-recent-item" style={{ color: MUTED }}>
+          <div
+            className="p-recent-inner"
+            style={{ padding: "1.2rem", fontStyle: "italic", fontSize: "13px" }}
+          >
+            Nenhum momento memorável arquivado ainda.
+          </div>
+        </div>
+      ) : (
+        moments.slice(0, 2).map((m) => {
+          const item = items.find((i) => i.id === m.itemId);
+          if (!item) return null;
+          const c = TC[item.type];
+          return (
+            <div key={m.id} className="p-recent-item" style={{ color: c }}>
+              <div className="p-recent-inner">
+                <span className="p-recent-sym" style={{ color: INK }}>
+                  {m.sym}
+                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="p-recent-title" style={{ color: INK }}>
+                    {item.title} <span className="p-recent-ref">· {m.ref}</span>
+                  </div>
+                  <div className="p-recent-body">{m.text}</div>
+                </div>
+                <Pill bg={c}>{m.tag}</Pill>
+              </div>
+            </div>
+          );
+        })
+      )}
+    </div>
+  );
+}
+
+
+==================== FILE: components/modals/ItemModal.tsx ====================
+
+import React, { useState } from "react";
+import type { MediaItem, MediaType, ItemStatus } from "../../types";
+import CustomSelect from "../ui/CustomSelect";
+
+interface ItemModalProps {
+  item: MediaItem | null;
+  onSave: (data: Omit<MediaItem, "id"> & { id?: number }) => void;
+  onDelete: (id: number) => void;
+  onClose: () => void;
+}
+
+export default function ItemModal({
+  item,
+  onSave,
+  onDelete,
+  onClose,
+}: ItemModalProps) {
+  const [title, setTitle] = useState(item?.title || "");
+  const [creator, setCreator] = useState(item?.creator || "");
+  const [type, setType] = useState<MediaType>(item?.type || "book");
+  const [status, setStatus] = useState<ItemStatus>(item?.status || "reading");
+  const [progress, setProgress] = useState(item?.progress ?? 0);
+  const [total, setTotal] = useState(item?.total ?? 100);
+  const [unit, setUnit] = useState(item?.unit || "pág.");
+
+  const ok = title.trim() && creator.trim() && total > 0;
+
+  // Opções mapeadas para o novo CustomSelect
+  const typeOptions = [
+    { value: "book", label: "Livro" },
+    { value: "film", label: "Filme ou Série" },
+    { value: "manga", label: "Mangá ou HQ" },
+  ];
+
+  const statusOptions = [
+    { value: "reading", label: "Consumindo" },
+    { value: "done", label: "Concluído" },
+  ];
+
+  return (
+    <div className="p-modal-overlay">
+      <div className="p-modal-box">
+        <div className="p-modal-top">
+          <button className="p-modal-close" onClick={onClose}>
+            ×
+          </button>
+          <div className="p-modal-eyebrow">
+            {item ? "modificar" : "adicionar à estante"}
+          </div>
+          <div className="p-modal-title">
+            {item ? "Editar Obra" : "Nova Obra"}
+          </div>
+        </div>
+        <div className="p-modal-body">
+          <label className="p-field-label">Título</label>
+          <input
+            className="p-field-input"
+            placeholder="ex: O Alquimista..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+
+          <label className="p-field-label">Autor / Criador / Diretor</label>
+          <input
+            className="p-field-input"
+            placeholder="ex: Paulo Coelho..."
+            value={creator}
+            onChange={(e) => setCreator(e.target.value)}
+          />
+
+          <div className="p-field-row-2">
+            <div>
+              <label className="p-field-label">Tipo de Obra</label>
+              <CustomSelect
+                value={type}
+                options={typeOptions}
+                onChange={(val) => setType(val as MediaType)}
+              />
+            </div>
+            <div>
+              <label className="p-field-label">Status de consumo</label>
+              <CustomSelect
+                value={status}
+                options={statusOptions}
+                onChange={(val) => setStatus(val as ItemStatus)}
+              />
+            </div>
+          </div>
+
+          <div className="p-field-row-2">
+            <div>
+              <label className="p-field-label">Progresso Atual</label>
+              <input
+                className="p-field-input"
+                type="number"
+                value={progress}
+                onChange={(e) =>
+                  setProgress(Math.max(0, Number(e.target.value)))
+                }
+              />
+            </div>
+            <div>
+              <label className="p-field-label">Total estimado</label>
+              <input
+                className="p-field-input"
+                type="number"
+                value={total}
+                onChange={(e) => setTotal(Math.max(1, Number(e.target.value)))}
+              />
+            </div>
+          </div>
+
+          <label className="p-field-label">Unidade de Medida</label>
+          <input
+            className="p-field-input"
+            placeholder="ex: pág., cap., min, temp."
+            value={unit}
+            onChange={(e) => setUnit(e.target.value)}
+          />
+
+          <button
+            className="p-primary-btn"
+            disabled={!ok}
+            onClick={() =>
+              ok &&
+              onSave({
+                id: item?.id,
+                title: title.trim(),
+                creator: creator.trim(),
+                type,
+                status,
+                progress,
+                total,
+                unit,
+              })
+            }
+          >
+            {item ? "Salvar Alterações" : "Adicionar Obra"}
+          </button>
+
+          {item && (
+            <button className="p-danger-btn" onClick={() => onDelete(item.id)}>
+              Excluir Obra Permanentemente
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+==================== FILE: components/modals/MoodModal.tsx ====================
+
+import React, { useState, useEffect } from "react";
+import type { MediaItem } from "../../types";
+import { MOODS, CTXS, INK, PAPER, MUTED } from "../../constants";
+
+interface MoodModalProps {
+  items: MediaItem[];
+  onSave: (data: {
+    itemId: number;
+    mood: string;
+    ctx: string;
+    note: string;
+    sym?: string;
+    newProgress?: number;
+  }) => void;
+  onClose: () => void;
+}
+
+export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
+  const [itemId, setItemId] = useState<number>(items[0]?.id || 0);
+  const [mood, setMood] = useState<string | null>(null);
+  const [ctx, setCtx] = useState<string | null>(null);
+  const [note, setNote] = useState("");
+
+  const selectedItem = items.find((i) => i.id === itemId);
+  const [newProg, setNewProg] = useState(selectedItem?.progress || 0);
+
+  useEffect(() => {
+    if (selectedItem) {
+      setNewProg(selectedItem.progress);
+    }
+  }, [itemId, selectedItem]);
+
+  const ok = mood && ctx && itemId;
+
+  return (
+    <div className="p-modal-overlay">
+      <div className="p-modal-box">
+        <div className="p-modal-top">
+          <button className="p-modal-close" onClick={onClose}>
+            ×
+          </button>
+          <div className="p-modal-eyebrow">registrar sessão</div>
+          <div className="p-modal-title">como você está agora?</div>
+        </div>
+        <div className="p-modal-body">
+          <label className="p-field-label">O que você está consumindo</label>
+          <select
+            className="p-field-select"
+            value={itemId}
+            onChange={(e) => setItemId(Number(e.target.value))}
+          >
+            {items.map((i) => (
+              <option key={i.id} value={i.id}>
+                {i.title}
+              </option>
+            ))}
+          </select>
+
+          {selectedItem && (
+            <div
+              style={{
+                background: "rgba(14,12,10,0.05)",
+                padding: "10px",
+                marginBottom: "1.5rem",
+                border: "2px solid #0E0C0A",
+              }}
+            >
+              <label className="p-field-label" style={{ marginBottom: "4px" }}>
+                Atualizar Progresso nesta sessão?
+              </label>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                <input
+                  className="p-field-input"
+                  style={{ marginBottom: 0, width: "80px" }}
+                  type="number"
+                  value={newProg}
+                  onChange={(e) =>
+                    setNewProg(
+                      Math.min(
+                        selectedItem.total,
+                        Math.max(0, Number(e.target.value)),
+                      ),
+                    )
+                  }
+                />
+                <span style={{ fontSize: "12px", fontWeight: "bold" }}>
+                  de {selectedItem.total} {selectedItem.unit}
+                </span>
+              </div>
+            </div>
+          )}
+
+          <label className="p-field-label">Seu humor</label>
+          <div className="p-mood-grid">
+            {MOODS.map((m) => (
+              <div
+                key={m.k}
+                className="p-mood-btn"
+                onClick={() => setMood(m.k)}
+                style={{
+                  background: mood === m.k ? INK : "transparent",
+                  color: mood === m.k ? PAPER : MUTED,
+                }}
+              >
+                <span
+                  className="p-mood-sym"
+                  style={{ color: mood === m.k ? PAPER : INK }}
+                >
+                  {m.s}
+                </span>
+                <span
+                  className="p-mood-key"
+                  style={{ color: mood === m.k ? PAPER : INK }}
+                >
+                  {m.k}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <label className="p-field-label">Onde você está</label>
+          <div className="p-chip-row">
+            {CTXS.map((c) => (
+              <div
+                key={c}
+                className="p-chip"
+                onClick={() => setCtx(c)}
+                style={{
+                  background: ctx === c ? INK : "transparent",
+                  color: ctx === c ? PAPER : MUTED,
+                }}
+              >
+                {c}
+              </div>
+            ))}
+          </div>
+
+          <label className="p-field-label">Uma frase (opcional)</label>
+          <textarea
+            className="p-field-textarea"
+            rows={3}
+            placeholder="O que ficou dessa sessão..."
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+          />
+
+          <button
+            className="p-primary-btn"
+            disabled={!ok}
+            onClick={() =>
+              ok &&
+              mood &&
+              ctx &&
+              onSave({
+                itemId,
+                mood,
+                ctx,
+                note,
+                sym: MOODS.find((m) => m.k === mood)?.s,
+                newProgress: newProg,
+              })
+            }
+          >
+            salvar sessão
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+==================== FILE: components/modals/ConnectionModal.tsx ====================
+
+import React, { useState } from "react";
+import type { MediaItem } from "../../types";
+
+interface ConnectionModalProps {
+  items: MediaItem[];
+  onSave: (data: { fromId: number; toId: number; reason: string }) => void;
+  onClose: () => void;
+}
+
+export default function ConnectionModal({
+  items,
+  onSave,
+  onClose,
+}: ConnectionModalProps) {
+  const [fromId, setFromId] = useState<number>(items[0]?.id || 0);
+  const [toId, setToId] = useState<number>(items[1]?.id || 0);
+  const [reason, setReason] = useState("");
+
+  const ok = fromId && toId && fromId !== toId && reason.trim();
+
+  return (
+    <div className="p-modal-overlay">
+      <div className="p-modal-box">
+        <div className="p-modal-top">
+          <button className="p-modal-close" onClick={onClose}>
+            ×
+          </button>
+          <div className="p-modal-eyebrow">vincular ideias</div>
+          <div className="p-modal-title">Nova Conexão</div>
+        </div>
+        <div className="p-modal-body">
+          <label className="p-field-label">Obra Origem</label>
+          <select
+            className="p-field-select"
+            value={fromId}
+            onChange={(e) => setFromId(Number(e.target.value))}
+          >
+            {items.map((i) => (
+              <option key={i.id} value={i.id}>
+                {i.title}
+              </option>
+            ))}
+          </select>
+
+          <label className="p-field-label">Obra Destino</label>
+          <select
+            className="p-field-select"
+            value={toId}
+            onChange={(e) => setToId(Number(e.target.value))}
+          >
+            {items.map((i) => (
+              <option key={i.id} value={i.id}>
+                {i.title}
+              </option>
+            ))}
+          </select>
+
+          <label className="p-field-label">Motivo do vínculo / Paralelo</label>
+          <textarea
+            className="p-field-textarea"
+            rows={3}
+            placeholder="O que conecta essas duas histórias?"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
+
+          <button
+            className="p-primary-btn"
+            disabled={!ok}
+            onClick={() =>
+              ok && onSave({ fromId, toId, reason: reason.trim() })
+            }
+          >
+            Criar Conexão
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+==================== FILE: components/modals/MomentModal.tsx ====================
+
+import React, { useState } from "react";
+import type { MediaItem } from "../../types";
+import { MOODS, TAGS, INK, PAPER, MUTED } from "../../constants";
+
+interface MomentModalProps {
+  items: MediaItem[];
+  onSave: (data: {
+    itemId: number;
+    text: string;
+    mood: string;
+    sym?: string;
+    tag: string;
+    ref: string;
+    ctx: string;
+  }) => void;
+  onClose: () => void;
+}
+
+export default function MomentModal({
+  items,
+  onSave,
+  onClose,
+}: MomentModalProps) {
+  const [itemId, setItemId] = useState<number>(items[0]?.id || 0);
+  const [text, setText] = useState("");
+  const [mood, setMood] = useState<string | null>(null);
+  const [tag, setTag] = useState<string | null>(null);
+  const [ref, setRef] = useState("");
+
+  const ok = text.trim() && mood && itemId;
+
+  return (
+    <div className="p-modal-overlay">
+      <div className="p-modal-box">
+        <div className="p-modal-top">
+          <button className="p-modal-close" onClick={onClose}>
+            ×
+          </button>
+          <div className="p-modal-eyebrow">guardar momento</div>
+          <div className="p-modal-title">o que ficou com você?</div>
+        </div>
+        <div className="p-modal-body">
+          <label className="p-field-label">De qual obra</label>
+          <select
+            className="p-field-select"
+            value={itemId}
+            onChange={(e) => setItemId(Number(e.target.value))}
+          >
+            {items.map((i) => (
+              <option key={i.id} value={i.id}>
+                {i.title}
+              </option>
+            ))}
+          </select>
+          <label className="p-field-label">
+            onde na obra (cap., pág., cena...)
+          </label>
+          <input
+            className="p-field-input"
+            placeholder="ex: cap. 23, p. 187..."
+            value={ref}
+            onChange={(e) => setRef(e.target.value)}
+          />
+          <label className="p-field-label">descreva o momento</label>
+          <textarea
+            className="p-field-textarea"
+            rows={4}
+            placeholder="a cena, a frase que te marcou..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <label className="p-field-label">como você se sentiu</label>
+          <div className="p-mood-grid">
+            {MOODS.map((m) => (
+              <div
+                key={m.k}
+                className="p-mood-btn"
+                onClick={() => setMood(m.k)}
+                style={{
+                  background: mood === m.k ? INK : "transparent",
+                  color: mood === m.k ? PAPER : MUTED,
+                }}
+              >
+                <span
+                  className="p-mood-sym"
+                  style={{ color: mood === m.k ? PAPER : INK }}
+                >
+                  {m.s}
+                </span>
+                <span
+                  className="p-mood-key"
+                  style={{ color: mood === m.k ? PAPER : INK }}
+                >
+                  {m.k}
+                </span>
+              </div>
+            ))}
+          </div>
+          <label className="p-field-label">em uma palavra</label>
+          <div className="p-chip-row">
+            {TAGS.map((t) => (
+              <div
+                key={t}
+                className="p-chip"
+                onClick={() => setTag(t)}
+                style={{
+                  background: tag === t ? INK : "transparent",
+                  color: tag === t ? PAPER : MUTED,
+                }}
+              >
+                {t}
+              </div>
+            ))}
+          </div>
+          <button
+            className="p-primary-btn"
+            disabled={!ok}
+            onClick={() =>
+              ok &&
+              mood &&
+              onSave({
+                itemId,
+                text: text.trim(),
+                mood,
+                sym: MOODS.find((m) => m.k === mood)?.s,
+                tag: tag || "marcante",
+                ref: ref || "—",
+                ctx: "agora",
+              })
+            }
+          >
+            guardar momento
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+==================== FILE: components/ui/UIHelpers.tsx ====================
+
+import React from "react";
+import type { MediaType } from "../../types";
+import { TC, TL, INK } from "../../constants";
+
+interface BadgeProps {
+  type: MediaType;
+}
+
+export function Badge({ type }: BadgeProps) {
+  const color = TC[type];
+  return (
+    <span className="p-type-badge" style={{ color, borderColor: color }}>
+      {TL[type]}
+    </span>
+  );
+}
+
+interface PillProps {
+  children: React.ReactNode;
+  bg: string;
+}
+
+export function Pill({ children, bg }: PillProps) {
+  return (
+    <span
+      className="p-pill"
+      style={{ background: bg, border: `2px solid ${INK}` }}
+    >
+      {children}
+    </span>
+  );
+}
+
+interface SectionHeadProps {
+  children: React.ReactNode;
+  extra?: React.ReactNode;
+}
+
+export function SectionHead({ children, extra }: SectionHeadProps) {
+  return (
+    <div className="p-section-head">
+      <span className="p-section-label">{children}</span>
+      <div className="p-section-line" />
+      {extra}
+    </div>
+  );
+}
+
+
+==================== FILE: components/ui/CustomSelect.tsx ====================
+
+import React, { useState, useRef, useEffect } from "react";
+
+interface Option {
+  value: any;
+  label: string;
+}
+
+interface CustomSelectProps {
+  value: any;
+  options: Option[];
+  onChange: (value: any) => void;
+}
+
+export default function CustomSelect({
+  value,
+  options,
+  onChange,
+}: CustomSelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const selectedOption = options.find((opt) => opt.value === value);
+
+  // Fecha o dropdown caso o usuário clique fora dele
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className={`p-custom-select-container ${isOpen ? "open" : ""}`}
+    >
+      <button
+        type="button"
+        className="p-custom-select-trigger"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {selectedOption ? selectedOption.label : "Selecione..."}
+      </button>
+
+      {isOpen && (
+        <div className="p-custom-select-dropdown">
+          {options.map((opt) => {
+            const isSelected = opt.value === value;
+            return (
+              <div
+                key={String(opt.value)}
+                className={`p-custom-select-option ${isSelected ? "selected" : ""}`}
+                onClick={() => {
+                  onChange(opt.value);
+                  setIsOpen(false);
+                }}
+              >
+                {opt.label}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+==================== FILE: main.tsx ====================
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+
+
+==================== FILE: types.ts ====================
+
+export type MediaType = "book" | "film" | "manga";
+export type ItemStatus = "reading" | "done";
+
+export interface MediaItem {
+  id: number;
+  title: string;
+  creator: string;
+  type: MediaType;
+  status: ItemStatus;
+  progress: number;
+  total: number;
+  unit: string;
+}
+
+export interface Moment {
+  id: number;
+  itemId: number;
+  ref: string;
+  text: string;
+  mood: string;
+  sym: string;
+  ctx: string;
+  tag: string;
+}
+
+export interface Connection {
+  id: string;
+  fromId: number;
+  toId: number;
+  reason: string;
+}
+
+export interface Session {
+  id: number;
+  itemId: number;
+  mood: string;
+  sym: string;
+  ctx: string;
+  note?: string;
+}
+
+export interface Mood {
+  k: string;
+  s: string;
+}

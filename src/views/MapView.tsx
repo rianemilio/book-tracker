@@ -1,0 +1,285 @@
+import React, { useState } from "react";
+import type { MediaItem, Moment, Connection } from "../types";
+import { TC, INK, PAPER, MUTED } from "../constants";
+import { Badge } from "../components/ui/UIHelpers";
+import ConnectionModal from "../components/modals/ConnectionModal";
+
+interface MapViewProps {
+  items: MediaItem[];
+  moments: Moment[];
+  connections: Connection[];
+  onAddConnection: (data: {
+    fromId: number;
+    toId: number;
+    reason: string;
+  }) => void;
+  onDeleteConnection: (id: string) => void;
+}
+
+interface MapNode extends MediaItem {
+  x: number;
+  y: number;
+}
+
+export default function MapView({
+  items,
+  moments,
+  connections,
+  onAddConnection,
+  onDeleteConnection,
+}: MapViewProps) {
+  const [sel, setSel] = useState<MediaItem | undefined>(items[0]);
+  const [showConnModal, setShowConnModal] = useState(false);
+
+  const cx = 290,
+    cy = 148,
+    r = 108;
+
+  const nodes: MapNode[] = items.slice(0, 8).map((item, i) => {
+    const totalNodes = Math.min(items.length, 8);
+    const a = (2 * Math.PI * i) / totalNodes - Math.PI / 2;
+    return {
+      ...item,
+      x: Math.round(cx + r * Math.cos(a)),
+      y: Math.round(cy + r * Math.sin(a)),
+    };
+  });
+
+  const activeNodeIds = nodes.map((n) => n.id);
+  const relevantConns = connections.filter(
+    (c) => activeNodeIds.includes(c.fromId) && activeNodeIds.includes(c.toId),
+  );
+  const mmt = sel ? moments.find((m) => m.itemId === sel.id) : undefined;
+
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <div className="p-section-head" style={{ margin: 0, flex: 1 }}>
+          <span className="p-section-label">mapa de conexões</span>
+          <div className="p-section-line" />
+        </div>
+        <button
+          className="p-ghost-btn"
+          onClick={() => setShowConnModal(true)}
+          style={{ marginLeft: 14 }}
+        >
+          + Vincular ideias
+        </button>
+      </div>
+
+      {showConnModal && (
+        <ConnectionModal
+          items={items}
+          onClose={() => setShowConnModal(false)}
+          onSave={(data) => {
+            onAddConnection(data);
+            setShowConnModal(false);
+          }}
+        />
+      )}
+
+      {items.length === 0 ? (
+        <div className="p-drip-add" style={{ cursor: "default" }}>
+          Adicione obras à sua estante para começar a mapear paralelos.
+        </div>
+      ) : (
+        <>
+          <div className="p-map-bg">
+            <svg
+              viewBox="0 0 580 296"
+              style={{ width: "100%", display: "block" }}
+            >
+              {/* Linhas de Conexões de Assuntos */}
+              {relevantConns.map((conn) => {
+                const nodeA = nodes.find((n) => n.id === conn.fromId);
+                const nodeB = nodes.find((n) => n.id === conn.toId);
+                if (!nodeA || !nodeB) return null;
+                const active =
+                  sel && (sel.id === nodeA.id || sel.id === nodeB.id);
+                return (
+                  <line
+                    key={conn.id}
+                    x1={nodeA.x}
+                    y1={nodeA.y}
+                    x2={nodeB.x}
+                    y2={nodeB.y}
+                    stroke={active ? "#8B1A1A" : INK}
+                    strokeWidth={active ? 3 : 1}
+                    opacity={active ? 0.9 : 0.2}
+                    strokeDasharray={active ? "" : "3 3"}
+                  />
+                );
+              })}
+
+              {/* Raios centralizadores */}
+              {nodes.map((n) => (
+                <line
+                  key={`v-${n.id}`}
+                  x1={cx}
+                  y1={cy}
+                  x2={n.x}
+                  y2={n.y}
+                  stroke={sel?.id === n.id ? TC[n.type] : INK}
+                  strokeWidth={sel?.id === n.id ? 2 : 0.5}
+                  opacity={sel?.id === n.id ? 0.8 : 0.15}
+                  strokeDasharray="4 4"
+                />
+              ))}
+
+              {/* Formas orgânicas dos nós */}
+              {nodes.map((n) => {
+                const active = sel?.id === n.id;
+                const c = TC[n.type];
+                const lbl =
+                  n.title.length > 11 ? n.title.slice(0, 10) + "…" : n.title;
+                return (
+                  <g
+                    key={n.id}
+                    onClick={() => setSel(n)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <path
+                      d={`
+                      M ${n.x - 38},${n.y - 10} 
+                      C ${n.x - 22},${n.y - 22} ${n.x + 22},${n.y - 18} ${n.x + 38},${n.y - 10} 
+                      C ${n.x + 44},${n.y - 2} ${n.x + 42},${n.y + 10} ${n.x + 32},${n.y + 15} 
+                      C ${n.x + 18},${n.y + 18} ${n.x - 18},${n.y + 16} ${n.x - 32},${n.y + 14} 
+                      C ${n.x - 44},${n.y + 6} ${n.x - 42},${n.y - 4} ${n.x - 38},${n.y - 10} Z
+                    `}
+                      fill={active ? c : PAPER}
+                      stroke={INK}
+                      strokeWidth={active ? 3 : 1.5}
+                    />
+                    <text
+                      x={n.x}
+                      y={n.y + 4}
+                      textAnchor="middle"
+                      fontSize={9}
+                      fontFamily="'Helvetica Neue',Arial,sans-serif"
+                      letterSpacing=".04em"
+                      fill={active ? PAPER : INK}
+                      fontWeight={900}
+                    >
+                      {lbl}
+                    </text>
+                  </g>
+                );
+              })}
+
+              {/* Centro do Grafo */}
+              <path
+                d={`
+                M ${cx - 24},${cy - 8} 
+                C ${cx - 15},${cy - 18} ${cx + 15},${cy - 16} ${cx + 24},${cy - 8} 
+                C ${cx + 28},${cy - 2} ${cx + 26},${cy + 10} ${cx + 18},${cy + 14} 
+                C ${cx + 10},${cy + 16} ${cx - 10},${cy + 14} ${cx - 18},${cy + 12} 
+                C ${cx - 26},${cy + 6} ${cx - 28},${cy - 4} ${cx - 24},${cy - 8} Z
+              `}
+                fill={INK}
+              />
+              <text
+                x={cx}
+                y={cy + 4}
+                textAnchor="middle"
+                fontSize={9}
+                fontFamily="'Helvetica Neue',Arial,sans-serif"
+                fill={PAPER}
+                letterSpacing=".12em"
+                fontWeight={900}
+              >
+                você
+              </text>
+            </svg>
+          </div>
+
+          {sel && (
+            <div className="p-conn-card" style={{ color: TC[sel.type] }}>
+              <div style={{ flex: 1, paddingLeft: 6 }}>
+                <Badge type={sel.type} />
+                <div className="p-conn-title">{sel.title}</div>
+                <div className="p-conn-author">{sel.creator}</div>
+                <div className="p-field-label" style={{ marginBottom: 10 }}>
+                  Conexões Ativas
+                </div>
+                <div className="p-conn-tags">
+                  {connections
+                    .filter((c) => c.fromId === sel.id || c.toId === sel.id)
+                    .map((c) => {
+                      const otherItem = items.find(
+                        (i) =>
+                          i.id === (c.fromId === sel.id ? c.toId : c.fromId),
+                      );
+                      if (!otherItem) return null;
+                      return (
+                        <span
+                          key={c.id}
+                          className="p-conn-tag"
+                          style={{ background: TC[otherItem.type] }}
+                        >
+                          {otherItem.title} — {c.reason}
+                          <button
+                            className="p-del-conn"
+                            title="Excluir conexão"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onDeleteConnection(c.id);
+                            }}
+                          >
+                            ×
+                          </button>
+                        </span>
+                      );
+                    })}
+                  {connections.filter(
+                    (c) => c.fromId === sel.id || c.toId === sel.id,
+                  ).length === 0 && (
+                    <span
+                      style={{
+                        color: MUTED,
+                        fontSize: "12px",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      Nenhuma conexão temática cadastrada para esta obra.
+                    </span>
+                  )}
+                </div>
+                {mmt && (
+                  <div
+                    style={{
+                      paddingTop: 14,
+                      borderTop: `2px dashed ${INK}`,
+                      marginTop: 14,
+                    }}
+                  >
+                    <div className="p-field-label" style={{ marginBottom: 6 }}>
+                      Momento de destaque
+                    </div>
+                    <div
+                      style={{
+                        fontStyle: "italic",
+                        fontSize: 13,
+                        lineHeight: 1.75,
+                        color: INK,
+                        fontFamily: "Georgia,serif",
+                      }}
+                    >
+                      "{mmt.text}"
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
