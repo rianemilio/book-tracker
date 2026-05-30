@@ -15,7 +15,6 @@ body {
 .p-header-container {
   position: relative;
   background: #0E0C0A;
-  padding-bottom: 12px;
 }
 
 .p-header {
@@ -85,16 +84,6 @@ body {
 
 .p-reg-btn.secondary:hover {
   box-shadow: 2px 2px 0px #1A3A5C;
-}
-
-/* Gotejamento de Tinta Inferior */
-.p-header-drips {
-  position: absolute;
-  bottom: -12px;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-  pointer-events: none;
 }
 
 /* Navegação */

@@ -211,20 +211,6 @@ export default function App() {
             </button>
           </div>
         </div>
-        <div className="p-header-drips">
-          <svg
-            viewBox="0 0 1440 24"
-            preserveAspectRatio="none"
-            style={{
-              display: "block",
-              width: "100%",
-              height: "24px",
-              fill: INK,
-            }}
-          >
-            <path d="M0,0 L1440,0 L1440,6 Q1420,18 1400,6 Q1380,2 1360,14 Q1320,24 1290,10 Q1250,2 1220,18 Q1180,22 1150,10 Q1100,0 1060,14 Q1020,24 980,10 Q950,2 920,18 Q880,22 850,10 Q800,0 760,14 Q720,24 680,10 Q650,2 620,18 Q580,22 550,10 Q500,0 460,14 Q420,24 380,10 Q350,2 320,18 Q280,22 250,10 Q200,0 160,14 Q120,24 80,10 Q50,2 20,18 L0,8 Z" />
-          </svg>
-        </div>
       </div>
 
       <div className="p-nav">
