@@ -14,16 +14,32 @@ body {
 /* Cabeçalho */
 .p-header-container {
   position: relative;
-  background: #0E0C0A;
+  padding-bottom: 10px; 
+  margin-bottom: 1.5rem;
 }
 
 .p-header {
   background: #0E0C0A;
-  padding: 2rem 2rem 1.2rem;
+  padding: 2.5rem 2rem 2.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transform: skewY(-1deg);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), 0 100%);
+  position: relative;
+  z-index: 2;
+  transform: none; 
+}
+
+.p-header-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #8B1A1A;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), 0 100%);
+  z-index: 1;
 }
 
 .p-logo {
@@ -90,9 +106,12 @@ body {
 .p-nav {
   background: #1A1714;
   display: flex;
-  padding: 1rem 2rem 0.6rem;
+  padding: 1.2rem 2rem 1rem;
+  border-top: 4px solid #0E0C0A;
   border-bottom: 4px solid #0E0C0A;
+  box-shadow: 0 4px 0px #8B1A1A;
   gap: 12px;
+  margin-bottom: 1.5rem;
 }
 
 .p-nav-btn {
