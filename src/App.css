@@ -69,11 +69,12 @@ body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   transform-style: preserve-3d;
+  box-shadow: 0 0 0 1px #0E0C0A, 4px 4px 0px #8B1A1A;
 }
 
 .p-reg-btn:hover {
   transform: rotate(0deg) skewX(-6deg) translate3d(2px, 2px, 0);
-  box-shadow: 2px 2px 0px #8B1A1A;
+  box-shadow: 0 0 0 1px #0E0C0A, 2px 2px 0px #8B1A1A;
 }
 
 .p-reg-btn.secondary {
@@ -553,15 +554,13 @@ body {
 
 .p-modal-box {
   background: #F4EFE6;
+  background-clip: padding-box;
   width: 100%;
   max-width: 460px;
   border: 4px solid #0E0C0A;
-  box-shadow: 12px 12px 0px #8B1A1A;
+  box-shadow: 0 0 0 1px #0E0C0A, 12px 12px 0px #8B1A1A;
   transform: rotate(-1.5deg);
-  transform: rotate(-1.5deg) translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
+  outline: 1px solid transparent;
 }
 
 .p-modal-top {
@@ -689,9 +688,10 @@ body {
   text-align: center;
   min-width: 64px;
   transition: all .12s;
-  border: 2px solid #0E0C0A !important;
+  border: none !important;
+  box-shadow: inset 0 0 0 2px #0E0C0A, 3px 3px 0px #0E0C0A;
   transform: skewX(-8deg);
-  box-shadow: 3px 3px 0px #0E0C0A;
+  background-clip: padding-box;
 }
 
 .p-mood-btn:hover {
@@ -728,8 +728,10 @@ body {
   font-size: 12px;
   font-weight: 800;
   transition: all .12s;
-  border: 2px solid #0E0C0A !important;
+  border: none !important;
+  box-shadow: inset 0 0 0 2px #0E0C0A;
   transform: skewX(-8deg);
+  background-clip: padding-box;
 }
 
 .p-primary-btn {
@@ -748,6 +750,7 @@ body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   transform-style: preserve-3d;
+  box-shadow: 0 0 0 1px #0E0C0A, 5px 5px 0px #8B1A1A;
 }
 
 .p-primary-btn:disabled {
@@ -891,19 +894,24 @@ body {
   top: 100%;
   left: 0;
   right: 0;
-  background: #F4EFE6;
+  background: #0E0C0A;
   border: 3px solid #0E0C0A;
-  box-shadow: 6px 6px 0px #8B1A1A;
+  box-shadow: inset 0 0 0 1px #0E0C0A, 6px 6px 0px #8B1A1A;
   z-index: 110;
   margin-top: 4px;
   max-height: 200px;
   overflow-y: auto;
-
-  transform: rotate(-1deg) translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
+  transform: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  padding: 0;
+  outline: none;
 }
+
+.p-custom-select-dropdown::-webkit-scrollbar {
+  display: none;
+}
+
 .p-custom-select-option {
   padding: 10px 14px;
   font-size: 13px;
@@ -913,6 +921,8 @@ body {
   transition: all 0.1s ease;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  background: #F4EFE6;
+  background-clip: border-box;
 }
 
 .p-custom-select-option:hover {
@@ -924,15 +934,22 @@ body {
   background: #0E0C0A;
   color: #F4EFE6;
 }
+
+.p-type-badge,
+.p-pill,
+.p-nav-btn,
+.p-reg-btn,
 .p-stat-card,
 .p-item-card,
 .p-moment-card,
 .p-recent-item,
+.p-primary-btn,
 .p-ghost-btn,
 .p-chip,
 .p-mood-btn,
 .p-filter-btn {
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
+  -webkit-backface-visibility: content !important;
+  backface-visibility: visible !important;
+  transform-style: flat !important;
+  outline: 1px solid transparent;
 }
