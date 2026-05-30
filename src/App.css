@@ -688,10 +688,13 @@ body {
   text-align: center;
   min-width: 64px;
   transition: all .12s;
-  border: none !important;
-  box-shadow: inset 0 0 0 2px #0E0C0A, 3px 3px 0px #0E0C0A;
+  border: 2px solid #0E0C0A !important;
+  box-shadow: 1px 1px 0px #0E0C0A, 
+              2px 2px 0px #0E0C0A, 
+              3px 3px 0px #0E0C0A !important;
   transform: skewX(-8deg);
-  background-clip: padding-box;
+  border-radius: 1px;
+  outline: none !important;
 }
 
 .p-mood-btn:hover {
@@ -728,10 +731,13 @@ body {
   font-size: 12px;
   font-weight: 800;
   transition: all .12s;
-  border: none !important;
-  box-shadow: inset 0 0 0 2px #0E0C0A;
+  border: 2px solid #0E0C0A !important;
+  box-shadow: 1px 1px 0px #0E0C0A, 
+              2px 2px 0px #0E0C0A, 
+              3px 3px 0px #0E0C0A !important;
   transform: skewX(-8deg);
-  background-clip: padding-box;
+  border-radius: 1px;
+  outline: none !important;
 }
 
 .p-primary-btn {
