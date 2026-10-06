@@ -159,7 +159,8 @@ export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
                 ctx,
                 note,
                 sym: MOODS.find((m) => m.k === mood)?.s,
-                newProgress: newProg,
+                newProgress:
+                  newProg !== selectedItem?.progress ? newProg : undefined,
               })
             }
           >
