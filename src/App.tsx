@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { usePersistentState } from "./hooks/usePersistentState";
+import { withProgress } from "./utils/progress";
 
 import type { MediaItem, Moment, Connection, Session } from "./types";
 import {
@@ -50,17 +51,9 @@ export default function App() {
 
   const handleQuickProgress = (id: number, delta: number) => {
     setItems((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          const nextProg = Math.min(
-            item.total,
-            Math.max(0, item.progress + delta),
-          );
-          const autoStatus = nextProg === item.total ? "done" : "reading";
-          return { ...item, progress: nextProg, status: autoStatus };
-        }
-        return item;
-      }),
+      prev.map((item) =>
+        item.id === id ? withProgress(item, item.progress + delta) : item,
+      ),
     );
   };
 
@@ -131,13 +124,9 @@ export default function App() {
 
     if (newProgress !== undefined) {
       setItems((prev) =>
-        prev.map((item) => {
-          if (item.id === itemId) {
-            const autoStatus = newProgress === item.total ? "done" : "reading";
-            return { ...item, progress: newProgress, status: autoStatus };
-          }
-          return item;
-        }),
+        prev.map((item) =>
+          item.id === itemId ? withProgress(item, newProgress) : item,
+        ),
       );
     }
     setShowMood(false);

@@ -3,6 +3,7 @@ import type { MediaItem, Moment, Session, MediaType } from "../types";
 import { TC, INK, PAPER, MUTED } from "../constants";
 import { Badge, Pill, SectionHead } from "../components/ui/UIHelpers";
 import { formatDate } from "../utils/date";
+import { progressPercent } from "../utils/progress";
 
 interface HomeViewProps {
   items: MediaItem[];
@@ -152,10 +153,7 @@ export default function HomeView({
       ) : (
         <div className="p-item-grid">
           {filtered.map((item) => {
-            const pct = Math.min(
-              100,
-              Math.round((item.progress / item.total) * 100) || 0,
-            );
+            const pct = progressPercent(item);
             const c = TC[item.type];
             return (
               <div key={item.id} className="p-item-card" style={{ color: c }}>
