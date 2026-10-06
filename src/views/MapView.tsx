@@ -32,13 +32,15 @@ export default function MapView({
   const sel = items.find((i) => i.id === selId) ?? items[0];
   const [showConnModal, setShowConnModal] = useState(false);
 
-  const cx = 290,
-    cy = 148,
-    r = 108;
+  // Raio cresce com a quantidade de obras para manter ~90px entre os nós
+  const r = Math.max(108, Math.ceil((items.length * 90) / (2 * Math.PI)));
+  const width = Math.max(580, 2 * r + 100);
+  const height = Math.max(296, 2 * r + 60);
+  const cx = width / 2,
+    cy = height / 2;
 
-  const nodes: MapNode[] = items.slice(0, 8).map((item, i) => {
-    const totalNodes = Math.min(items.length, 8);
-    const a = (2 * Math.PI * i) / totalNodes - Math.PI / 2;
+  const nodes: MapNode[] = items.map((item, i) => {
+    const a = (2 * Math.PI * i) / items.length - Math.PI / 2;
     return {
       ...item,
       x: Math.round(cx + r * Math.cos(a)),
@@ -46,10 +48,6 @@ export default function MapView({
     };
   });
 
-  const activeNodeIds = nodes.map((n) => n.id);
-  const relevantConns = connections.filter(
-    (c) => activeNodeIds.includes(c.fromId) && activeNodeIds.includes(c.toId),
-  );
   const mmt = sel ? moments.find((m) => m.itemId === sel.id) : undefined;
 
   return (
@@ -94,11 +92,11 @@ export default function MapView({
         <>
           <div className="p-map-bg">
             <svg
-              viewBox="0 0 580 296"
+              viewBox={`0 0 ${width} ${height}`}
               style={{ width: "100%", display: "block" }}
             >
               {/* Linhas de Conexões de Assuntos */}
-              {relevantConns.map((conn) => {
+              {connections.map((conn) => {
                 const nodeA = nodes.find((n) => n.id === conn.fromId);
                 const nodeB = nodes.find((n) => n.id === conn.toId);
                 if (!nodeA || !nodeB) return null;
