@@ -141,7 +141,17 @@ export default function MapView({
                 return (
                   <g
                     key={n.id}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={n.title}
+                    aria-pressed={active}
                     onClick={() => setSelId(n.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setSelId(n.id);
+                      }
+                    }}
                     style={{ cursor: "pointer" }}
                   >
                     <path
