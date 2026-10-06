@@ -1,4 +1,4 @@
-import { MOODS, INK, PAPER, MUTED } from "../../constants";
+import { MOODS } from "../../constants";
 
 interface MoodPickerProps {
   value: string | null;
@@ -15,23 +15,9 @@ export function MoodPicker({ value, onChange }: MoodPickerProps) {
           className="p-mood-btn"
           aria-pressed={value === m.k}
           onClick={() => onChange(m.k)}
-          style={{
-            background: value === m.k ? INK : "transparent",
-            color: value === m.k ? PAPER : MUTED,
-          }}
         >
-          <span
-            className="p-mood-sym"
-            style={{ color: value === m.k ? PAPER : INK }}
-          >
-            {m.s}
-          </span>
-          <span
-            className="p-mood-key"
-            style={{ color: value === m.k ? PAPER : INK }}
-          >
-            {m.k}
-          </span>
+          <span className="p-mood-sym">{m.s}</span>
+          <span className="p-mood-key">{m.k}</span>
         </button>
       ))}
     </div>
@@ -54,10 +40,6 @@ export function ChipPicker({ options, value, onChange }: ChipPickerProps) {
           className="p-chip"
           aria-pressed={value === o}
           onClick={() => onChange(o)}
-          style={{
-            background: value === o ? INK : "transparent",
-            color: value === o ? PAPER : MUTED,
-          }}
         >
           {o}
         </button>

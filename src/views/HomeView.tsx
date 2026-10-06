@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { MediaItem, Moment, Session, MediaType } from "../types";
-import { INK, PAPER, MUTED } from "../constants";
+import { INK, MUTED } from "../constants";
 import { Badge, Pill, SectionHead } from "../components/ui/UIHelpers";
 import { formatDate } from "../utils/date";
 import { progressPercent } from "../utils/progress";
@@ -126,11 +126,8 @@ export default function HomeView({
               <button
                 key={k}
                 className="p-filter-btn"
+                aria-pressed={filter === k}
                 onClick={() => setFilter(k)}
-                style={{
-                  background: filter === k ? INK : "transparent",
-                  color: filter === k ? PAPER : MUTED,
-                }}
               >
                 {l}
               </button>

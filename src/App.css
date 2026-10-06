@@ -1040,3 +1040,28 @@ body {
 .p-prog-pct--accent {
   color: inherit;
 }
+
+/* Botões de seleção: o estado vem de aria-pressed */
+.p-filter-btn,
+.p-mood-btn,
+.p-chip {
+  background: transparent;
+  color: #6b6358;
+}
+
+.p-mood-btn .p-mood-sym,
+.p-mood-btn .p-mood-key {
+  color: #0e0c0a;
+}
+
+.p-filter-btn[aria-pressed="true"],
+.p-mood-btn[aria-pressed="true"],
+.p-chip[aria-pressed="true"] {
+  background: #0e0c0a;
+  color: #f4efe6;
+}
+
+.p-mood-btn[aria-pressed="true"] .p-mood-sym,
+.p-mood-btn[aria-pressed="true"] .p-mood-key {
+  color: #f4efe6;
+}
