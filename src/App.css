@@ -1238,3 +1238,31 @@ body {
   color: #0e0c0a;
   font-family: Georgia, serif;
 }
+
+/* Atualização de progresso no registro de sessão */
+.p-progress-box {
+  background: rgba(14, 12, 10, 0.05);
+  padding: 10px;
+  margin-bottom: 1.5rem;
+  border: 2px solid #0e0c0a;
+}
+
+.p-progress-box .p-field-label {
+  margin-bottom: 4px;
+}
+
+.p-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.p-progress-row .p-field-input {
+  margin-bottom: 0;
+  width: 80px;
+}
+
+.p-progress-total {
+  font-size: 12px;
+  font-weight: bold;
+}

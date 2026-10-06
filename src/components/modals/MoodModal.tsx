@@ -53,21 +53,13 @@ export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
       />
 
       {selectedItem && (
-        <div
-          style={{
-            background: "rgba(14,12,10,0.05)",
-            padding: "10px",
-            marginBottom: "1.5rem",
-            border: "2px solid #0E0C0A",
-          }}
-        >
-          <label className="p-field-label" style={{ marginBottom: "4px" }}>
+        <div className="p-progress-box">
+          <label className="p-field-label">
             Atualizar Progresso nesta sessão?
           </label>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div className="p-progress-row">
             <input
               className="p-field-input"
-              style={{ marginBottom: 0, width: "80px" }}
               type="number"
               value={newProg}
               onChange={(e) =>
@@ -79,7 +71,7 @@ export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
                 )
               }
             />
-            <span style={{ fontSize: "12px", fontWeight: "bold" }}>
+            <span className="p-progress-total">
               de {selectedItem.total} {selectedItem.unit}
             </span>
           </div>
