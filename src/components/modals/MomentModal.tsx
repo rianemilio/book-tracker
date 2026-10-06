@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { MediaItem } from "../../types";
-import { MOODS, TAGS } from "../../constants";
+import { MOODS, TAGS, CTXS } from "../../constants";
 import CustomSelect from "../ui/CustomSelect";
 import { MoodPicker, ChipPicker } from "../ui/Pickers";
 
@@ -27,6 +27,7 @@ export default function MomentModal({
   const [text, setText] = useState("");
   const [mood, setMood] = useState<string | null>(null);
   const [tag, setTag] = useState<string | null>(null);
+  const [ctx, setCtx] = useState<string | null>(null);
   const [ref, setRef] = useState("");
 
   const ok = text.trim() && mood && itemId;
@@ -73,6 +74,8 @@ export default function MomentModal({
           />
           <label className="p-field-label">como você se sentiu</label>
           <MoodPicker value={mood} onChange={setMood} />
+          <label className="p-field-label">onde você estava (opcional)</label>
+          <ChipPicker options={CTXS} value={ctx} onChange={setCtx} />
           <label className="p-field-label">em uma palavra</label>
           <ChipPicker options={TAGS} value={tag} onChange={setTag} />
           <button
@@ -88,7 +91,7 @@ export default function MomentModal({
                 sym: MOODS.find((m) => m.k === mood)?.s,
                 tag: tag || "marcante",
                 ref: ref || "—",
-                ctx: "agora",
+                ctx: ctx || "agora",
               })
             }
           >
