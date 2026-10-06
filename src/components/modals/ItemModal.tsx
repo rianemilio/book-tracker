@@ -129,7 +129,7 @@ export default function ItemModal({
                 creator: creator.trim(),
                 type,
                 status,
-                progress,
+                progress: Math.min(progress, total),
                 total,
                 unit,
               })

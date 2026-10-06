@@ -150,7 +150,10 @@ export default function HomeView({
       ) : (
         <div className="p-item-grid">
           {filtered.map((item) => {
-            const pct = Math.round((item.progress / item.total) * 100) || 0;
+            const pct = Math.min(
+              100,
+              Math.round((item.progress / item.total) * 100) || 0,
+            );
             const c = TC[item.type];
             return (
               <div key={item.id} className="p-item-card" style={{ color: c }}>
@@ -165,7 +168,7 @@ export default function HomeView({
                 <div className="p-prog-track">
                   <div
                     className="p-prog-fill"
-                    style={{ width: `${Math.min(100, pct)}%`, background: c }}
+                    style={{ width: `${pct}%`, background: c }}
                   />
                 </div>
                 <div className="p-prog-pct" style={{ color: c }}>
