@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useEffectEvent, useId, useRef } from "react";
 
 interface ModalProps {
   eyebrow: string;
@@ -18,8 +18,7 @@ export default function Modal({
 }: ModalProps) {
   const titleId = useId();
   const boxRef = useRef<HTMLDivElement>(null);
-  const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+  const close = useEffectEvent(onClose);
 
   // Foca o modal ao abrir e devolve o foco a quem o abriu ao fechar
   useEffect(() => {
@@ -32,7 +31,7 @@ export default function Modal({
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
-        onCloseRef.current();
+        close();
         return;
       }
       if (e.key !== "Tab" || !boxRef.current) return;
