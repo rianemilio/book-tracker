@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { MediaItem } from "../../types";
 import CustomSelect from "../ui/CustomSelect";
+import Modal from "../ui/Modal";
 
 interface ConnectionModalProps {
   items: MediaItem[];
@@ -25,50 +26,37 @@ export default function ConnectionModal({
   }));
 
   return (
-    <div className="p-modal-overlay">
-      <div className="p-modal-box">
-        <div className="p-modal-top">
-          <button className="p-modal-close" onClick={onClose}>
-            +
-          </button>
-          <div className="p-modal-eyebrow">vincular ideias</div>
-          <div className="p-modal-title">Nova Conexão</div>
-        </div>
-        <div className="p-modal-body">
-          <label className="p-field-label">Obra Origem</label>
-          <CustomSelect
-            value={fromId}
-            options={itemOptions}
-            onChange={(val) => setFromId(Number(val))}
-          />
+    <Modal eyebrow="vincular ideias" title="Nova Conexão" onClose={onClose}>
+      <label className="p-field-label">Obra Origem</label>
+      <CustomSelect
+        value={fromId}
+        options={itemOptions}
+        onChange={(val) => setFromId(Number(val))}
+      />
 
-          <label className="p-field-label">Obra Destino</label>
-          <CustomSelect
-            value={toId}
-            options={itemOptions}
-            onChange={(val) => setToId(Number(val))}
-          />
+      <label className="p-field-label">Obra Destino</label>
+      <CustomSelect
+        value={toId}
+        options={itemOptions}
+        onChange={(val) => setToId(Number(val))}
+      />
 
-          <label className="p-field-label">Motivo do vínculo / Paralelo</label>
-          <textarea
-            className="p-field-textarea"
-            rows={3}
-            placeholder="O que conecta essas duas histórias?"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-          />
+      <label className="p-field-label">Motivo do vínculo / Paralelo</label>
+      <textarea
+        className="p-field-textarea"
+        rows={3}
+        placeholder="O que conecta essas duas histórias?"
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+      />
 
-          <button
-            className="p-primary-btn"
-            disabled={!ok}
-            onClick={() =>
-              ok && onSave({ fromId, toId, reason: reason.trim() })
-            }
-          >
-            Criar Conexão
-          </button>
-        </div>
-      </div>
-    </div>
+      <button
+        className="p-primary-btn"
+        disabled={!ok}
+        onClick={() => ok && onSave({ fromId, toId, reason: reason.trim() })}
+      >
+        Criar Conexão
+      </button>
+    </Modal>
   );
 }

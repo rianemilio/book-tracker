@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { MediaItem, MediaType, ItemStatus } from "../../types";
 import CustomSelect from "../ui/CustomSelect";
+import Modal from "../ui/Modal";
 
 interface ItemModalProps {
   item: MediaItem | null;
@@ -38,113 +39,100 @@ export default function ItemModal({
   ];
 
   return (
-    <div className="p-modal-overlay">
-      <div className="p-modal-box">
-        <div className="p-modal-top">
-          <button className="p-modal-close" onClick={onClose}>
-            +
-          </button>
-          <div className="p-modal-eyebrow">
-            {item ? "modificar" : "adicionar à estante"}
-          </div>
-          <div className="p-modal-title">
-            {item ? "Editar Obra" : "Nova Obra"}
-          </div>
+    <Modal
+      eyebrow={item ? "modificar" : "adicionar à estante"}
+      title={item ? "Editar Obra" : "Nova Obra"}
+      onClose={onClose}
+    >
+      <label className="p-field-label">Título</label>
+      <input
+        className="p-field-input"
+        placeholder="ex: O Alquimista..."
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+
+      <label className="p-field-label">Autor / Criador / Diretor</label>
+      <input
+        className="p-field-input"
+        placeholder="ex: Paulo Coelho..."
+        value={creator}
+        onChange={(e) => setCreator(e.target.value)}
+      />
+
+      <div className="p-field-row-2">
+        <div>
+          <label className="p-field-label">Tipo de Obra</label>
+          <CustomSelect
+            value={type}
+            options={typeOptions}
+            onChange={(val) => setType(val as MediaType)}
+          />
         </div>
-        <div className="p-modal-body">
-          <label className="p-field-label">Título</label>
-          <input
-            className="p-field-input"
-            placeholder="ex: O Alquimista..."
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+        <div>
+          <label className="p-field-label">Status de consumo</label>
+          <CustomSelect
+            value={status}
+            options={statusOptions}
+            onChange={(val) => setStatus(val as ItemStatus)}
           />
-
-          <label className="p-field-label">Autor / Criador / Diretor</label>
-          <input
-            className="p-field-input"
-            placeholder="ex: Paulo Coelho..."
-            value={creator}
-            onChange={(e) => setCreator(e.target.value)}
-          />
-
-          <div className="p-field-row-2">
-            <div>
-              <label className="p-field-label">Tipo de Obra</label>
-              <CustomSelect
-                value={type}
-                options={typeOptions}
-                onChange={(val) => setType(val as MediaType)}
-              />
-            </div>
-            <div>
-              <label className="p-field-label">Status de consumo</label>
-              <CustomSelect
-                value={status}
-                options={statusOptions}
-                onChange={(val) => setStatus(val as ItemStatus)}
-              />
-            </div>
-          </div>
-
-          <div className="p-field-row-2">
-            <div>
-              <label className="p-field-label">Progresso Atual</label>
-              <input
-                className="p-field-input"
-                type="number"
-                value={progress}
-                onChange={(e) =>
-                  setProgress(Math.max(0, Number(e.target.value)))
-                }
-              />
-            </div>
-            <div>
-              <label className="p-field-label">Total estimado</label>
-              <input
-                className="p-field-input"
-                type="number"
-                value={total}
-                onChange={(e) => setTotal(Math.max(1, Number(e.target.value)))}
-              />
-            </div>
-          </div>
-
-          <label className="p-field-label">Unidade de Medida</label>
-          <input
-            className="p-field-input"
-            placeholder="ex: pág., cap., min, temp."
-            value={unit}
-            onChange={(e) => setUnit(e.target.value)}
-          />
-
-          <button
-            className="p-primary-btn"
-            disabled={!ok}
-            onClick={() =>
-              ok &&
-              onSave({
-                id: item?.id,
-                title: title.trim(),
-                creator: creator.trim(),
-                type,
-                status,
-                progress: Math.min(progress, total),
-                total,
-                unit,
-              })
-            }
-          >
-            {item ? "Salvar Alterações" : "Adicionar Obra"}
-          </button>
-
-          {item && (
-            <button className="p-danger-btn" onClick={() => onDelete(item.id)}>
-              Excluir Obra Permanentemente
-            </button>
-          )}
         </div>
       </div>
-    </div>
+
+      <div className="p-field-row-2">
+        <div>
+          <label className="p-field-label">Progresso Atual</label>
+          <input
+            className="p-field-input"
+            type="number"
+            value={progress}
+            onChange={(e) => setProgress(Math.max(0, Number(e.target.value)))}
+          />
+        </div>
+        <div>
+          <label className="p-field-label">Total estimado</label>
+          <input
+            className="p-field-input"
+            type="number"
+            value={total}
+            onChange={(e) => setTotal(Math.max(1, Number(e.target.value)))}
+          />
+        </div>
+      </div>
+
+      <label className="p-field-label">Unidade de Medida</label>
+      <input
+        className="p-field-input"
+        placeholder="ex: pág., cap., min, temp."
+        value={unit}
+        onChange={(e) => setUnit(e.target.value)}
+      />
+
+      <button
+        className="p-primary-btn"
+        disabled={!ok}
+        onClick={() =>
+          ok &&
+          onSave({
+            id: item?.id,
+            title: title.trim(),
+            creator: creator.trim(),
+            type,
+            status,
+            progress: Math.min(progress, total),
+            total,
+            unit,
+          })
+        }
+      >
+        {item ? "Salvar Alterações" : "Adicionar Obra"}
+      </button>
+
+      {item && (
+        <button className="p-danger-btn" onClick={() => onDelete(item.id)}>
+          Excluir Obra Permanentemente
+        </button>
+      )}
+    </Modal>
   );
 }
