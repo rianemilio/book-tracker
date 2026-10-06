@@ -100,6 +100,7 @@ export default function App() {
   const handleDeleteItem = (id: number) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
     setMoments((prev) => prev.filter((m) => m.itemId !== id));
+    setSessions((prev) => prev.filter((s) => s.itemId !== id));
     setConnections((prev) =>
       prev.filter((c) => c.fromId !== id && c.toId !== id),
     );
