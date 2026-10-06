@@ -529,6 +529,9 @@ body {
 }
 
 .p-drip-add {
+  display: block;
+  width: 100%;
+  font-family: inherit;
   border: 3px dashed #0E0C0A;
   background: rgba(201, 192, 174, 0.2);
   padding: 1.6rem;
@@ -702,7 +705,14 @@ body {
               3px 3px 0px #0E0C0A !important;
   transform: skewX(-8deg);
   border-radius: 1px;
-  outline: none !important;
+  font-family: inherit;
+}
+
+.p-mood-btn:focus-visible,
+.p-chip:focus-visible,
+.p-drip-add:focus-visible {
+  outline: 3px solid #8B1A1A;
+  outline-offset: 3px;
 }
 
 .p-mood-btn:hover {
@@ -745,7 +755,7 @@ body {
               3px 3px 0px #0E0C0A !important;
   transform: skewX(-8deg);
   border-radius: 1px;
-  outline: none !important;
+  font-family: inherit;
 }
 
 .p-primary-btn {

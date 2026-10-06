@@ -9,9 +9,11 @@ export function MoodPicker({ value, onChange }: MoodPickerProps) {
   return (
     <div className="p-mood-grid">
       {MOODS.map((m) => (
-        <div
+        <button
+          type="button"
           key={m.k}
           className="p-mood-btn"
+          aria-pressed={value === m.k}
           onClick={() => onChange(m.k)}
           style={{
             background: value === m.k ? INK : "transparent",
@@ -30,7 +32,7 @@ export function MoodPicker({ value, onChange }: MoodPickerProps) {
           >
             {m.k}
           </span>
-        </div>
+        </button>
       ))}
     </div>
   );
@@ -46,9 +48,11 @@ export function ChipPicker({ options, value, onChange }: ChipPickerProps) {
   return (
     <div className="p-chip-row">
       {options.map((o) => (
-        <div
+        <button
+          type="button"
           key={o}
           className="p-chip"
+          aria-pressed={value === o}
           onClick={() => onChange(o)}
           style={{
             background: value === o ? INK : "transparent",
@@ -56,7 +60,7 @@ export function ChipPicker({ options, value, onChange }: ChipPickerProps) {
           }}
         >
           {o}
-        </div>
+        </button>
       ))}
     </div>
   );

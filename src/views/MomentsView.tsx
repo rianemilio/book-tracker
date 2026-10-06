@@ -40,9 +40,9 @@ export default function MomentsView({
       </div>
 
       {moments.length === 0 ? (
-        <div className="p-drip-add" onClick={onAdd}>
+        <button type="button" className="p-drip-add" onClick={onAdd}>
           + Você ainda não guardou momentos. Clique para catalogar o primeiro.
-        </div>
+        </button>
       ) : (
         moments.map((m) => {
           const item = items.find((i) => i.id === m.itemId);
@@ -102,9 +102,9 @@ export default function MomentsView({
         })
       )}
       {moments.length > 0 && (
-        <div className="p-drip-add" onClick={onAdd}>
+        <button type="button" className="p-drip-add" onClick={onAdd}>
           + guardar um momento que ficou com você
-        </div>
+        </button>
       )}
     </div>
   );
