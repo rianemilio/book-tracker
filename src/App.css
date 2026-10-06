@@ -951,7 +951,8 @@ body {
   background-clip: border-box;
 }
 
-.p-custom-select-option:hover {
+.p-custom-select-option:hover,
+.p-custom-select-option.active {
   background: #8B1A1A;
   color: #F4EFE6;
 }

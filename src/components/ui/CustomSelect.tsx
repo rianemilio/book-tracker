@@ -1,25 +1,28 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 
-interface Option {
-  value: any;
+interface Option<T> {
+  value: T;
   label: string;
 }
 
-interface CustomSelectProps {
-  value: any;
-  options: Option[];
-  onChange: (value: any) => void;
+interface CustomSelectProps<T> {
+  value: T;
+  options: Option<T>[];
+  onChange: (value: T) => void;
 }
 
-export default function CustomSelect({
+export default function CustomSelect<T extends string | number>({
   value,
   options,
   onChange,
-}: CustomSelectProps) {
+}: CustomSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const listId = useId();
 
-  const selectedOption = options.find((opt) => opt.value === value);
+  const selectedIndex = options.findIndex((opt) => opt.value === value);
+  const selectedOption = options[selectedIndex];
 
   // Fecha o dropdown caso o usuário clique fora dele
   useEffect(() => {
@@ -35,6 +38,59 @@ export default function CustomSelect({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const open = () => {
+    setActiveIndex(Math.max(0, selectedIndex));
+    setIsOpen(true);
+  };
+
+  const select = (index: number) => {
+    const opt = options[index];
+    if (opt) onChange(opt.value);
+    setIsOpen(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isOpen) {
+      if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
+        e.preventDefault();
+        open();
+      }
+      return;
+    }
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setActiveIndex((i) => Math.min(options.length - 1, i + 1));
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveIndex((i) => Math.max(0, i - 1));
+        break;
+      case "Home":
+        e.preventDefault();
+        setActiveIndex(0);
+        break;
+      case "End":
+        e.preventDefault();
+        setActiveIndex(options.length - 1);
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        select(activeIndex);
+        break;
+      case "Escape":
+        // Fecha só o dropdown, sem fechar o modal em volta
+        e.preventDefault();
+        e.stopPropagation();
+        setIsOpen(false);
+        break;
+      case "Tab":
+        setIsOpen(false);
+        break;
+    }
+  };
+
   return (
     <div
       ref={containerRef}
@@ -43,23 +99,31 @@ export default function CustomSelect({
       <button
         type="button"
         className="p-custom-select-trigger"
-        onClick={() => setIsOpen(!isOpen)}
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-controls={listId}
+        aria-activedescendant={isOpen ? `${listId}-${activeIndex}` : undefined}
+        onClick={() => (isOpen ? setIsOpen(false) : open())}
+        onKeyDown={handleKeyDown}
       >
         {selectedOption ? selectedOption.label : "Selecione..."}
       </button>
 
       {isOpen && (
-        <div className="p-custom-select-dropdown">
-          {options.map((opt) => {
+        <div className="p-custom-select-dropdown" role="listbox" id={listId}>
+          {options.map((opt, index) => {
             const isSelected = opt.value === value;
+            const isActive = index === activeIndex;
             return (
               <div
                 key={String(opt.value)}
-                className={`p-custom-select-option ${isSelected ? "selected" : ""}`}
-                onClick={() => {
-                  onChange(opt.value);
-                  setIsOpen(false);
-                }}
+                id={`${listId}-${index}`}
+                role="option"
+                aria-selected={isSelected}
+                className={`p-custom-select-option ${isSelected ? "selected" : ""} ${isActive ? "active" : ""}`}
+                onMouseEnter={() => setActiveIndex(index)}
+                onClick={() => select(index)}
               >
                 {opt.label}
               </div>
