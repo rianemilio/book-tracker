@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { MediaItem, Moment, Session, MediaType } from "../types";
 import { TC, INK, PAPER, MUTED } from "../constants";
 import { Badge, Pill, SectionHead } from "../components/ui/UIHelpers";
+import { formatDate } from "../utils/date";
 
 interface HomeViewProps {
   items: MediaItem[];
@@ -91,6 +92,7 @@ export default function HomeView({
             >
               {items.find((i) => i.id === last.itemId)?.title || "Obra"} ·{" "}
               {last.mood} · {last.ctx}
+              {last.createdAt && <> · {formatDate(last.createdAt)}</>}
               {last.note && (
                 <span
                   style={{

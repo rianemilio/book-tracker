@@ -21,6 +21,7 @@ export interface Moment {
   sym: string;
   ctx: string;
   tag: string;
+  createdAt?: string;
 }
 
 export interface Connection {
@@ -37,6 +38,7 @@ export interface Session {
   sym: string;
   ctx: string;
   note?: string;
+  createdAt?: string;
 }
 
 export interface Mood {

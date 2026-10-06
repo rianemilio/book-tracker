@@ -118,7 +118,15 @@ export default function App() {
 
     setSessions((prev) => [
       ...prev,
-      { id: Date.now(), itemId, mood, ctx, note, sym: sym || "○" },
+      {
+        id: Date.now(),
+        itemId,
+        mood,
+        ctx,
+        note,
+        sym: sym || "○",
+        createdAt: new Date().toISOString(),
+      },
     ]);
 
     if (newProgress !== undefined) {
@@ -150,7 +158,12 @@ export default function App() {
           items={items}
           onSave={(d) => {
             setMoments((p) => [
-              { id: Date.now(), ...d, sym: d.sym || "★" },
+              {
+                id: Date.now(),
+                ...d,
+                sym: d.sym || "★",
+                createdAt: new Date().toISOString(),
+              },
               ...p,
             ]);
             setShowMoment(false);

@@ -1,6 +1,7 @@
 import type { MediaItem, Moment } from "../types";
 import { TC, INK } from "../constants";
 import { Badge, Pill } from "../components/ui/UIHelpers";
+import { formatDate } from "../utils/date";
 
 interface MomentsViewProps {
   items: MediaItem[];
@@ -91,6 +92,7 @@ export default function MomentsView({
                   </span>
                   <span className="p-meta-txt" style={{ color: INK }}>
                     {m.mood} · {m.ctx}
+                    {m.createdAt && <> · {formatDate(m.createdAt)}</>}
                   </span>
                   <Pill bg={c}>{m.tag}</Pill>
                 </div>
