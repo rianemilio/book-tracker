@@ -47,6 +47,10 @@ src/
   components/modals/ formulários de obra, sessão, momento e conexão
   components/ui/     Modal, CustomSelect, pickers e helpers visuais
   hooks/             usePersistentState (useState + localStorage)
+  utils/             regras de progresso e formatação de datas
+  test/              setup compartilhado dos testes (Vitest + Testing Library)
   constants.ts       paleta, humores, contextos, tags e dados de exemplo
   types.ts           tipos do domínio
 ```
+
+Os testes ficam ao lado do código que testam (`*.test.ts(x)`). Os estilos ficam em `App.css`; as cores de cada tipo de obra vêm de `data-type` e da variável `--type-color`.
