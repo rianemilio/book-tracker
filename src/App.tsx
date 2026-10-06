@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
+import { usePersistentState } from "./hooks/usePersistentState";
 
 import type { MediaItem, Moment, Connection, Session } from "./types";
 import {
@@ -22,49 +23,30 @@ import ItemModal from "./components/modals/ItemModal";
 export default function App() {
   const [tab, setTab] = useState<"home" | "map" | "moments">("home");
 
-  const [items, setItems] = useState<MediaItem[]>(() => {
-    const saved = localStorage.getItem("paginas_cenas_items");
-    return saved ? JSON.parse(saved) : INIT_ITEMS;
-  });
+  const [items, setItems] = usePersistentState<MediaItem[]>(
+    "paginas_cenas_items",
+    INIT_ITEMS,
+  );
 
-  const [moments, setMoments] = useState<Moment[]>(() => {
-    const saved = localStorage.getItem("paginas_cenas_moments");
-    return saved ? JSON.parse(saved) : INIT_MOMENTS;
-  });
+  const [moments, setMoments] = usePersistentState<Moment[]>(
+    "paginas_cenas_moments",
+    INIT_MOMENTS,
+  );
 
-  const [sessions, setSessions] = useState<Session[]>(() => {
-    const saved = localStorage.getItem("paginas_cenas_sessions");
-    return saved ? JSON.parse(saved) : INIT_SESSIONS;
-  });
+  const [sessions, setSessions] = usePersistentState<Session[]>(
+    "paginas_cenas_sessions",
+    INIT_SESSIONS,
+  );
 
-  const [connections, setConnections] = useState<Connection[]>(() => {
-    const saved = localStorage.getItem("paginas_cenas_connections");
-    return saved ? JSON.parse(saved) : INIT_CONNS;
-  });
+  const [connections, setConnections] = usePersistentState<Connection[]>(
+    "paginas_cenas_connections",
+    INIT_CONNS,
+  );
 
   const [showMood, setShowMood] = useState(false);
   const [showMoment, setShowMoment] = useState(false);
   const [editingItem, setEditingItem] = useState<MediaItem | null>(null);
   const [showNewItem, setShowNewItem] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem("paginas_cenas_items", JSON.stringify(items));
-  }, [items]);
-
-  useEffect(() => {
-    localStorage.setItem("paginas_cenas_moments", JSON.stringify(moments));
-  }, [moments]);
-
-  useEffect(() => {
-    localStorage.setItem("paginas_cenas_sessions", JSON.stringify(sessions));
-  }, [sessions]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "paginas_cenas_connections",
-      JSON.stringify(connections),
-    );
-  }, [connections]);
 
   const handleQuickProgress = (id: number, delta: number) => {
     setItems((prev) =>
