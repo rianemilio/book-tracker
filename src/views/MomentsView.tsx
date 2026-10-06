@@ -1,5 +1,4 @@
 import type { MediaItem, Moment } from "../types";
-import { INK } from "../constants";
 import { Badge, Pill } from "../components/ui/UIHelpers";
 import { formatDate } from "../utils/date";
 
@@ -18,23 +17,12 @@ export default function MomentsView({
 }: MomentsViewProps) {
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <div className="p-section-head" style={{ margin: 0, flex: 1 }}>
+      <div className="p-view-head">
+        <div className="p-section-head">
           <span className="p-section-label">momentos guardados</span>
           <div className="p-section-line" />
         </div>
-        <button
-          className="p-ghost-btn"
-          onClick={onAdd}
-          style={{ marginLeft: 14, flexShrink: 0 }}
-        >
+        <button className="p-ghost-btn" onClick={onAdd}>
           + guardar
         </button>
       </div>
@@ -50,46 +38,21 @@ export default function MomentsView({
           return (
             <div key={m.id} className="p-moment-card" data-type={item.type}>
               <div className="p-moment-inner">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    marginBottom: 10,
-                  }}
-                >
+                <div className="p-moment-head">
                   <Badge type={item.type} />
-                  <span
-                    style={{
-                      fontWeight: 900,
-                      fontStyle: "italic",
-                      fontSize: 16,
-                      color: INK,
-                      fontFamily: "Georgia,serif",
-                    }}
-                  >
-                    {item.title}
-                  </span>
+                  <span className="p-moment-title">{item.title}</span>
                   <span className="p-meta-txt">· {m.ref}</span>
                   <button
-                    className="p-ctrl-edit"
-                    style={{ marginLeft: "auto", textDecoration: "none" }}
+                    className="p-ctrl-edit p-ctrl-edit--plain"
                     onClick={() => onDeleteMoment(m.id)}
                   >
                     excluir
                   </button>
                 </div>
-                <div
-                  className="p-quote-text"
-                  style={{ borderLeft: `3px solid ${INK}` }}
-                >
-                  "{m.text}"
-                </div>
+                <div className="p-quote-text">"{m.text}"</div>
                 <div className="p-moment-meta">
-                  <span className="p-meta-sym" style={{ color: INK }}>
-                    {m.sym}
-                  </span>
-                  <span className="p-meta-txt" style={{ color: INK }}>
+                  <span className="p-meta-sym">{m.sym}</span>
+                  <span className="p-meta-txt">
                     {m.mood} · {m.ctx}
                     {m.createdAt && <> · {formatDate(m.createdAt)}</>}
                   </span>

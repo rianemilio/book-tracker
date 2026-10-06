@@ -1143,3 +1143,98 @@ body {
   flex: 1;
   min-width: 0;
 }
+
+/* Cabeçalho das abas Mapa e Momentos */
+.p-view-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.p-view-head .p-section-head {
+  margin: 0;
+  flex: 1;
+}
+
+.p-view-head .p-ghost-btn {
+  margin-left: 14px;
+  flex-shrink: 0;
+}
+
+/* Momentos */
+.p-moment-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.p-moment-title {
+  font-weight: 900;
+  font-style: italic;
+  font-size: 16px;
+  color: #0e0c0a;
+  font-family: Georgia, serif;
+}
+
+.p-ctrl-edit--plain {
+  text-decoration: none;
+}
+
+.p-quote-text {
+  border-left: 3px solid #0e0c0a;
+}
+
+.p-moment-meta .p-meta-sym,
+.p-moment-meta .p-meta-txt {
+  color: #0e0c0a;
+}
+
+/* Mapa */
+.p-map-svg {
+  width: 100%;
+  display: block;
+}
+
+.p-map-node {
+  cursor: pointer;
+}
+
+.p-map-node:focus-visible {
+  outline: 3px solid #8b1a1a;
+  outline-offset: 2px;
+}
+
+.p-conn-body {
+  flex: 1;
+  padding-left: 6px;
+}
+
+.p-conn-label {
+  margin-bottom: 10px;
+}
+
+.p-conn-empty {
+  color: #6b6358;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.p-conn-highlight {
+  padding-top: 14px;
+  border-top: 2px dashed #0e0c0a;
+  margin-top: 14px;
+}
+
+.p-conn-highlight .p-field-label {
+  margin-bottom: 6px;
+}
+
+.p-conn-quote {
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.75;
+  color: #0e0c0a;
+  font-family: Georgia, serif;
+}

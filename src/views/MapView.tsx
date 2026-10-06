@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { MediaItem, Moment, Connection } from "../types";
-import { TC, INK, PAPER, MUTED } from "../constants";
+import { TC, INK, PAPER } from "../constants";
 import { Badge } from "../components/ui/UIHelpers";
 import ConnectionModal from "../components/modals/ConnectionModal";
 
@@ -52,23 +52,12 @@ export default function MapView({
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <div className="p-section-head" style={{ margin: 0, flex: 1 }}>
+      <div className="p-view-head">
+        <div className="p-section-head">
           <span className="p-section-label">mapa de conexões</span>
           <div className="p-section-line" />
         </div>
-        <button
-          className="p-ghost-btn"
-          onClick={() => setShowConnModal(true)}
-          style={{ marginLeft: 14 }}
-        >
+        <button className="p-ghost-btn" onClick={() => setShowConnModal(true)}>
           + Vincular ideias
         </button>
       </div>
@@ -85,16 +74,13 @@ export default function MapView({
       )}
 
       {items.length === 0 ? (
-        <div className="p-drip-add" style={{ cursor: "default" }}>
+        <div className="p-drip-add p-drip-add--static">
           Adicione obras à sua estante para começar a mapear paralelos.
         </div>
       ) : (
         <>
           <div className="p-map-bg">
-            <svg
-              viewBox={`0 0 ${width} ${height}`}
-              style={{ width: "100%", display: "block" }}
-            >
+            <svg className="p-map-svg" viewBox={`0 0 ${width} ${height}`}>
               {/* Linhas de Conexões de Assuntos */}
               {connections.map((conn) => {
                 const nodeA = nodes.find((n) => n.id === conn.fromId);
@@ -141,6 +127,7 @@ export default function MapView({
                 return (
                   <g
                     key={n.id}
+                    className="p-map-node"
                     role="button"
                     tabIndex={0}
                     aria-label={n.title}
@@ -152,7 +139,6 @@ export default function MapView({
                         setSelId(n.id);
                       }
                     }}
-                    style={{ cursor: "pointer" }}
                   >
                     <path
                       d={`
@@ -210,11 +196,11 @@ export default function MapView({
 
           {sel && (
             <div className="p-conn-card" data-type={sel.type}>
-              <div style={{ flex: 1, paddingLeft: 6 }}>
+              <div className="p-conn-body">
                 <Badge type={sel.type} />
                 <div className="p-conn-title">{sel.title}</div>
                 <div className="p-conn-author">{sel.creator}</div>
-                <div className="p-field-label" style={{ marginBottom: 10 }}>
+                <div className="p-field-label p-conn-label">
                   Conexões Ativas
                 </div>
                 <div className="p-conn-tags">
@@ -249,39 +235,15 @@ export default function MapView({
                   {connections.filter(
                     (c) => c.fromId === sel.id || c.toId === sel.id,
                   ).length === 0 && (
-                    <span
-                      style={{
-                        color: MUTED,
-                        fontSize: "12px",
-                        fontStyle: "italic",
-                      }}
-                    >
+                    <span className="p-conn-empty">
                       Nenhuma conexão temática cadastrada para esta obra.
                     </span>
                   )}
                 </div>
                 {mmt && (
-                  <div
-                    style={{
-                      paddingTop: 14,
-                      borderTop: `2px dashed ${INK}`,
-                      marginTop: 14,
-                    }}
-                  >
-                    <div className="p-field-label" style={{ marginBottom: 6 }}>
-                      Momento de destaque
-                    </div>
-                    <div
-                      style={{
-                        fontStyle: "italic",
-                        fontSize: 13,
-                        lineHeight: 1.75,
-                        color: INK,
-                        fontFamily: "Georgia,serif",
-                      }}
-                    >
-                      "{mmt.text}"
-                    </div>
+                  <div className="p-conn-highlight">
+                    <div className="p-field-label">Momento de destaque</div>
+                    <div className="p-conn-quote">"{mmt.text}"</div>
                   </div>
                 )}
               </div>
