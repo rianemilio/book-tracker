@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { MediaItem, Moment, Session, MediaType } from "../types";
-import { INK, MUTED } from "../constants";
 import { Badge, Pill, SectionHead } from "../components/ui/UIHelpers";
 import { formatDate } from "../utils/date";
 import { progressPercent } from "../utils/progress";
@@ -49,63 +48,22 @@ export default function HomeView({
         ).map(([lbl, val, type]) => (
           <div key={lbl} className="p-stat-card" data-type={type}>
             <div className="p-stat-label">{lbl}</div>
-            <div className="p-stat-num" style={{ color: INK }}>
-              {Number(val)}
-            </div>
+            <div className="p-stat-num">{Number(val)}</div>
           </div>
         ))}
       </div>
 
       {last && (
         <div className="p-insight-bar">
-          <span
-            style={{
-              fontSize: 24,
-              fontFamily: "'Courier New',monospace",
-              flexShrink: 0,
-              fontWeight: "bold",
-            }}
-          >
-            {last.sym}
-          </span>
+          <span className="p-insight-sym">{last.sym}</span>
           <div>
-            <div
-              style={{
-                fontSize: 10,
-                opacity: 0.7,
-                letterSpacing: ".14em",
-                textTransform: "uppercase",
-                marginBottom: 3,
-                fontWeight: "900",
-              }}
-            >
-              última sessão
-            </div>
-            <div
-              style={{
-                fontStyle: "italic",
-                fontSize: 15,
-                fontFamily: "Georgia,serif",
-                fontWeight: "700",
-              }}
-            >
+            <div className="p-insight-label">última sessão</div>
+            <div className="p-insight-text">
               {items.find((i) => i.id === last.itemId)?.title || "Obra"} ·{" "}
               {last.mood} · {last.ctx}
               {last.createdAt && <> · {formatDate(last.createdAt)}</>}
               {last.note && (
-                <span
-                  style={{
-                    display: "block",
-                    fontSize: "12px",
-                    fontStyle: "normal",
-                    fontWeight: "normal",
-                    opacity: 0.9,
-                    fontFamily: "sans-serif",
-                    marginTop: "4px",
-                  }}
-                >
-                  "{last.note}"
-                </span>
+                <span className="p-insight-note">"{last.note}"</span>
               )}
             </div>
           </div>
@@ -139,10 +97,7 @@ export default function HomeView({
       </SectionHead>
 
       {filtered.length === 0 ? (
-        <div
-          className="p-drip-add"
-          style={{ cursor: "default", marginBottom: "2.5rem" }}
-        >
+        <div className="p-drip-add p-drip-add--static p-home-empty">
           Nenhuma história em andamento nessa categoria.
         </div>
       ) : (
@@ -154,7 +109,7 @@ export default function HomeView({
                 <Badge type={item.type} />
                 <div className="p-item-title">{item.title}</div>
                 <div className="p-item-author">{item.creator}</div>
-                <div className="p-prog-pct" style={{ color: INK }}>
+                <div className="p-prog-pct">
                   <span>
                     {item.progress} de {item.total} {item.unit}
                   </span>
@@ -210,21 +165,7 @@ export default function HomeView({
 
       <SectionHead
         extra={
-          <button
-            onClick={onTabMoments}
-            style={{
-              flexShrink: 0,
-              marginLeft: 10,
-              background: "none",
-              border: "none",
-              color: INK,
-              cursor: "pointer",
-              fontSize: 10,
-              fontWeight: 900,
-              letterSpacing: ".14em",
-              textTransform: "uppercase",
-            }}
-          >
+          <button className="p-link-btn" onClick={onTabMoments}>
             ver todos
           </button>
         }
@@ -233,11 +174,8 @@ export default function HomeView({
       </SectionHead>
 
       {moments.length === 0 ? (
-        <div className="p-recent-item" style={{ color: MUTED }}>
-          <div
-            className="p-recent-inner"
-            style={{ padding: "1.2rem", fontStyle: "italic", fontSize: "13px" }}
-          >
+        <div className="p-recent-item p-recent-item--empty">
+          <div className="p-recent-inner p-recent-empty">
             Nenhum momento memorável arquivado ainda.
           </div>
         </div>
@@ -248,11 +186,9 @@ export default function HomeView({
           return (
             <div key={m.id} className="p-recent-item" data-type={item.type}>
               <div className="p-recent-inner">
-                <span className="p-recent-sym" style={{ color: INK }}>
-                  {m.sym}
-                </span>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div className="p-recent-title" style={{ color: INK }}>
+                <span className="p-recent-sym">{m.sym}</span>
+                <div className="p-recent-content">
+                  <div className="p-recent-title">
                     {item.title} <span className="p-recent-ref">· {m.ref}</span>
                   </div>
                   <div className="p-recent-body">{m.text}</div>

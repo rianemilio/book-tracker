@@ -1065,3 +1065,81 @@ body {
 .p-mood-btn[aria-pressed="true"] .p-mood-key {
   color: #f4efe6;
 }
+
+/* Início */
+.p-stat-num {
+  color: #0e0c0a;
+}
+
+.p-insight-sym {
+  font-size: 24px;
+  font-family: "Courier New", monospace;
+  flex-shrink: 0;
+  font-weight: bold;
+}
+
+.p-insight-label {
+  font-size: 10px;
+  opacity: 0.7;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+  font-weight: 900;
+}
+
+.p-insight-text {
+  font-style: italic;
+  font-size: 15px;
+  font-family: Georgia, serif;
+  font-weight: 700;
+}
+
+.p-insight-note {
+  display: block;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: normal;
+  opacity: 0.9;
+  font-family: sans-serif;
+  margin-top: 4px;
+}
+
+.p-drip-add--static {
+  cursor: default;
+}
+
+.p-home-empty {
+  margin-bottom: 2.5rem;
+}
+
+.p-link-btn {
+  flex-shrink: 0;
+  margin-left: 10px;
+  background: none;
+  border: none;
+  color: #0e0c0a;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.p-recent-item--empty {
+  color: #6b6358;
+}
+
+.p-recent-empty {
+  padding: 1.2rem;
+  font-style: italic;
+  font-size: 13px;
+}
+
+.p-recent-sym {
+  color: #0e0c0a;
+}
+
+.p-recent-content {
+  flex: 1;
+  min-width: 0;
+}
