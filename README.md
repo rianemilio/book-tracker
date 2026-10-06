@@ -54,3 +54,11 @@ src/
 ```
 
 Os testes ficam ao lado do código que testam (`*.test.ts(x)`). Os estilos ficam em `App.css`; as cores de cada tipo de obra vêm de `data-type` e da variável `--type-color`.
+
+## Créditos e licença
+
+A interface é inspirada na estética de Persona 5. É um projeto pessoal, sem afiliação com a Atlus ou a Sega, e não usa nenhum asset do jogo.
+
+Os dados de exemplo citam obras reais (título e autor) apenas como referência; os direitos pertencem aos respectivos autores e editoras.
+
+Código sob a licença [MIT](LICENSE).
