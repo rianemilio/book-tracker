@@ -1,12 +1,12 @@
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
 # Copia os arquivos 
 COPY package*.json ./
 
-# Instala todas as dependências especificadas no package.json
-RUN npm install
+# Instala as dependências exatamente como no package-lock.json
+RUN npm ci
 
 # Copia o restante do código fonte do projeto
 COPY . .
