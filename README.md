@@ -26,14 +26,17 @@ podman run --rm -v "$PWD":/app:z -w /app node:22-alpine sh -c "npm ci && npm run
 
 ## Scripts
 
-| Script                 | O que faz                                |
-| ---------------------- | ---------------------------------------- |
-| `npm run dev`          | Servidor de desenvolvimento do Vite      |
-| `npm run build`        | Checagem de tipos e build de produção    |
-| `npm run preview`      | Serve o build de produção localmente     |
-| `npm run typecheck`    | Só a checagem de tipos                   |
-| `npm run format`       | Formata `src/**/*.{ts,tsx}` com Prettier |
-| `npm run format:check` | Verifica a formatação sem alterar nada   |
+| Script                 | O que faz                                    |
+| ---------------------- | -------------------------------------------- |
+| `npm run dev`          | Servidor de desenvolvimento do Vite          |
+| `npm run build`        | Checagem de tipos e build de produção        |
+| `npm run preview`      | Serve o build de produção localmente         |
+| `npm run typecheck`    | Só a checagem de tipos                       |
+| `npm run format`       | Formata `src/**/*.{ts,tsx,css}` com Prettier |
+| `npm run lint`         | Roda o ESLint                                |
+| `npm test`             | Roda os testes com Vitest                    |
+| `npm run test:watch`   | Testes em modo watch                         |
+| `npm run format:check` | Verifica a formatação sem alterar nada       |
 
 ## Estrutura
 
