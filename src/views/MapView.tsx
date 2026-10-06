@@ -28,7 +28,8 @@ export default function MapView({
   onAddConnection,
   onDeleteConnection,
 }: MapViewProps) {
-  const [sel, setSel] = useState<MediaItem | undefined>(items[0]);
+  const [selId, setSelId] = useState<number | undefined>(items[0]?.id);
+  const sel = items.find((i) => i.id === selId) ?? items[0];
   const [showConnModal, setShowConnModal] = useState(false);
 
   const cx = 290,
@@ -142,7 +143,7 @@ export default function MapView({
                 return (
                   <g
                     key={n.id}
-                    onClick={() => setSel(n)}
+                    onClick={() => setSelId(n.id)}
                     style={{ cursor: "pointer" }}
                   >
                     <path
