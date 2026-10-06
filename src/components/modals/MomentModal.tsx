@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { MediaItem } from "../../types";
-import { MOODS, TAGS, INK, PAPER, MUTED } from "../../constants";
+import { MOODS, TAGS } from "../../constants";
 import CustomSelect from "../ui/CustomSelect";
+import { MoodPicker, ChipPicker } from "../ui/Pickers";
 
 interface MomentModalProps {
   items: MediaItem[];
@@ -71,48 +72,9 @@ export default function MomentModal({
             onChange={(e) => setText(e.target.value)}
           />
           <label className="p-field-label">como você se sentiu</label>
-          <div className="p-mood-grid">
-            {MOODS.map((m) => (
-              <div
-                key={m.k}
-                className="p-mood-btn"
-                onClick={() => setMood(m.k)}
-                style={{
-                  background: mood === m.k ? INK : "transparent",
-                  color: mood === m.k ? PAPER : MUTED,
-                }}
-              >
-                <span
-                  className="p-mood-sym"
-                  style={{ color: mood === m.k ? PAPER : INK }}
-                >
-                  {m.s}
-                </span>
-                <span
-                  className="p-mood-key"
-                  style={{ color: mood === m.k ? PAPER : INK }}
-                >
-                  {m.k}
-                </span>
-              </div>
-            ))}
-          </div>
+          <MoodPicker value={mood} onChange={setMood} />
           <label className="p-field-label">em uma palavra</label>
-          <div className="p-chip-row">
-            {TAGS.map((t) => (
-              <div
-                key={t}
-                className="p-chip"
-                onClick={() => setTag(t)}
-                style={{
-                  background: tag === t ? INK : "transparent",
-                  color: tag === t ? PAPER : MUTED,
-                }}
-              >
-                {t}
-              </div>
-            ))}
-          </div>
+          <ChipPicker options={TAGS} value={tag} onChange={setTag} />
           <button
             className="p-primary-btn"
             disabled={!ok}

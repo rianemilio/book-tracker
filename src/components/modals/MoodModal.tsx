@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import type { MediaItem } from "../../types";
-import { MOODS, CTXS, INK, PAPER, MUTED } from "../../constants";
+import { MOODS, CTXS } from "../../constants";
 import CustomSelect from "../ui/CustomSelect";
+import { MoodPicker, ChipPicker } from "../ui/Pickers";
 
 interface MoodModalProps {
   items: MediaItem[];
@@ -93,49 +94,10 @@ export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
           )}
 
           <label className="p-field-label">Seu humor</label>
-          <div className="p-mood-grid">
-            {MOODS.map((m) => (
-              <div
-                key={m.k}
-                className="p-mood-btn"
-                onClick={() => setMood(m.k)}
-                style={{
-                  background: mood === m.k ? INK : "transparent",
-                  color: mood === m.k ? PAPER : MUTED,
-                }}
-              >
-                <span
-                  className="p-mood-sym"
-                  style={{ color: mood === m.k ? PAPER : INK }}
-                >
-                  {m.s}
-                </span>
-                <span
-                  className="p-mood-key"
-                  style={{ color: mood === m.k ? PAPER : INK }}
-                >
-                  {m.k}
-                </span>
-              </div>
-            ))}
-          </div>
+          <MoodPicker value={mood} onChange={setMood} />
 
           <label className="p-field-label">Onde você está</label>
-          <div className="p-chip-row">
-            {CTXS.map((c) => (
-              <div
-                key={c}
-                className="p-chip"
-                onClick={() => setCtx(c)}
-                style={{
-                  background: ctx === c ? INK : "transparent",
-                  color: ctx === c ? PAPER : MUTED,
-                }}
-              >
-                {c}
-              </div>
-            ))}
-          </div>
+          <ChipPicker options={CTXS} value={ctx} onChange={setCtx} />
 
           <label className="p-field-label">Uma frase (opcional)</label>
           <textarea
