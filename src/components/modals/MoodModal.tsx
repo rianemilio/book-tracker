@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { MediaItem } from "../../types";
 import { MOODS, CTXS } from "../../constants";
 import CustomSelect from "../ui/CustomSelect";
@@ -27,11 +27,10 @@ export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
   const selectedItem = items.find((i) => i.id === itemId);
   const [newProg, setNewProg] = useState(selectedItem?.progress || 0);
 
-  useEffect(() => {
-    if (selectedItem) {
-      setNewProg(selectedItem.progress);
-    }
-  }, [itemId, selectedItem]);
+  const handleItemChange = (id: number) => {
+    setItemId(id);
+    setNewProg(items.find((i) => i.id === id)?.progress || 0);
+  };
 
   const ok = mood && ctx && itemId;
 
@@ -50,7 +49,7 @@ export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
       <CustomSelect
         value={itemId}
         options={itemOptions}
-        onChange={(val) => setItemId(Number(val))}
+        onChange={(val) => handleItemChange(Number(val))}
       />
 
       {selectedItem && (
