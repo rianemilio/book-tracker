@@ -1,5 +1,5 @@
 import type { MediaItem, Moment } from "../types";
-import { TC, INK } from "../constants";
+import { INK } from "../constants";
 import { Badge, Pill } from "../components/ui/UIHelpers";
 import { formatDate } from "../utils/date";
 
@@ -47,9 +47,8 @@ export default function MomentsView({
         moments.map((m) => {
           const item = items.find((i) => i.id === m.itemId);
           if (!item) return null;
-          const c = TC[item.type];
           return (
-            <div key={m.id} className="p-moment-card" style={{ color: c }}>
+            <div key={m.id} className="p-moment-card" data-type={item.type}>
               <div className="p-moment-inner">
                 <div
                   style={{
@@ -94,7 +93,7 @@ export default function MomentsView({
                     {m.mood} · {m.ctx}
                     {m.createdAt && <> · {formatDate(m.createdAt)}</>}
                   </span>
-                  <Pill bg={c}>{m.tag}</Pill>
+                  <Pill type={item.type}>{m.tag}</Pill>
                 </div>
               </div>
             </div>

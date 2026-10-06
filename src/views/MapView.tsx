@@ -209,7 +209,7 @@ export default function MapView({
           </div>
 
           {sel && (
-            <div className="p-conn-card" style={{ color: TC[sel.type] }}>
+            <div className="p-conn-card" data-type={sel.type}>
               <div style={{ flex: 1, paddingLeft: 6 }}>
                 <Badge type={sel.type} />
                 <div className="p-conn-title">{sel.title}</div>
@@ -230,7 +230,7 @@ export default function MapView({
                         <span
                           key={c.id}
                           className="p-conn-tag"
-                          style={{ background: TC[otherItem.type] }}
+                          data-type={otherItem.type}
                         >
                           {otherItem.title} - {c.reason}
                           <button

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { MediaItem, Moment, Session, MediaType } from "../types";
-import { TC, INK, PAPER, MUTED } from "../constants";
+import { INK, PAPER, MUTED } from "../constants";
 import { Badge, Pill, SectionHead } from "../components/ui/UIHelpers";
 import { formatDate } from "../utils/date";
 import { progressPercent } from "../utils/progress";
@@ -40,17 +40,15 @@ export default function HomeView({
   return (
     <div>
       <div className="p-stat-grid">
-        {[
-          ["livros", cnt.book, TC.book],
-          ["filmes & séries", cnt.film, TC.film],
-          ["mangás & HQs", cnt.manga, TC.manga],
-        ].map(([lbl, val, c]) => (
-          <div
-            key={String(lbl)}
-            className="p-stat-card"
-            style={{ color: String(c) }}
-          >
-            <div className="p-stat-label">{String(lbl)}</div>
+        {(
+          [
+            ["livros", cnt.book, "book"],
+            ["filmes & séries", cnt.film, "film"],
+            ["mangás & HQs", cnt.manga, "manga"],
+          ] as const
+        ).map(([lbl, val, type]) => (
+          <div key={lbl} className="p-stat-card" data-type={type}>
+            <div className="p-stat-label">{lbl}</div>
             <div className="p-stat-num" style={{ color: INK }}>
               {Number(val)}
             </div>
@@ -154,9 +152,8 @@ export default function HomeView({
         <div className="p-item-grid">
           {filtered.map((item) => {
             const pct = progressPercent(item);
-            const c = TC[item.type];
             return (
-              <div key={item.id} className="p-item-card" style={{ color: c }}>
+              <div key={item.id} className="p-item-card" data-type={item.type}>
                 <Badge type={item.type} />
                 <div className="p-item-title">{item.title}</div>
                 <div className="p-item-author">{item.creator}</div>
@@ -166,12 +163,9 @@ export default function HomeView({
                   </span>
                 </div>
                 <div className="p-prog-track">
-                  <div
-                    className="p-prog-fill"
-                    style={{ width: `${pct}%`, background: c }}
-                  />
+                  <div className="p-prog-fill" style={{ width: `${pct}%` }} />
                 </div>
-                <div className="p-prog-pct" style={{ color: c }}>
+                <div className="p-prog-pct p-prog-pct--accent">
                   <span>{pct}%</span>
                 </div>
 
@@ -254,9 +248,8 @@ export default function HomeView({
         moments.slice(0, 2).map((m) => {
           const item = items.find((i) => i.id === m.itemId);
           if (!item) return null;
-          const c = TC[item.type];
           return (
-            <div key={m.id} className="p-recent-item" style={{ color: c }}>
+            <div key={m.id} className="p-recent-item" data-type={item.type}>
               <div className="p-recent-inner">
                 <span className="p-recent-sym" style={{ color: INK }}>
                   {m.sym}
@@ -267,7 +260,7 @@ export default function HomeView({
                   </div>
                   <div className="p-recent-body">{m.text}</div>
                 </div>
-                <Pill bg={c}>{m.tag}</Pill>
+                <Pill type={item.type}>{m.tag}</Pill>
               </div>
             </div>
           );

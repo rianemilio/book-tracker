@@ -1,15 +1,14 @@
 import React from "react";
 import type { MediaType } from "../../types";
-import { TC, TL, INK } from "../../constants";
+import { TL } from "../../constants";
 
 interface BadgeProps {
   type: MediaType;
 }
 
 export function Badge({ type }: BadgeProps) {
-  const color = TC[type];
   return (
-    <span className="p-type-badge" style={{ color, borderColor: color }}>
+    <span className="p-type-badge" data-type={type}>
       {TL[type]}
     </span>
   );
@@ -17,15 +16,12 @@ export function Badge({ type }: BadgeProps) {
 
 interface PillProps {
   children: React.ReactNode;
-  bg: string;
+  type: MediaType;
 }
 
-export function Pill({ children, bg }: PillProps) {
+export function Pill({ children, type }: PillProps) {
   return (
-    <span
-      className="p-pill"
-      style={{ background: bg, border: `2px solid ${INK}` }}
-    >
+    <span className="p-pill" data-type={type}>
       {children}
     </span>
   );

@@ -1,3 +1,28 @@
+/* Cor de cada tipo de obra; espelha TC em constants.ts (usado no SVG do mapa) */
+[data-type="book"] {
+  --type-color: #1a3a5c;
+}
+[data-type="film"] {
+  --type-color: #8b1a1a;
+}
+[data-type="manga"] {
+  --type-color: #2d5a27;
+}
+
+.p-stat-card,
+.p-item-card,
+.p-recent-item,
+.p-moment-card,
+.p-conn-card,
+.p-type-badge {
+  color: var(--type-color);
+}
+
+.p-pill,
+.p-conn-tag {
+  background: var(--type-color);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -326,6 +351,7 @@ body {
 
 .p-prog-fill {
   height: 100%;
+  background: currentColor;
 }
 
 .p-prog-pct {
@@ -445,6 +471,7 @@ body {
   padding: 4px 12px;
   transform: skewX(-10deg);
   margin-left: auto;
+  border: 2px solid #0e0c0a;
 }
 
 /* Área do Mapa */
@@ -1008,4 +1035,8 @@ body {
   backface-visibility: visible !important;
   transform-style: flat !important;
   outline: 1px solid transparent;
+}
+
+.p-prog-pct--accent {
+  color: inherit;
 }
