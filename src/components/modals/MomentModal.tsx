@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { MediaItem } from "../../types";
 import { MOODS, TAGS, INK, PAPER, MUTED } from "../../constants";
 import CustomSelect from "../ui/CustomSelect";

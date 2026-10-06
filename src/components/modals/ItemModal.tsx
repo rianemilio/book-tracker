@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { MediaItem, MediaType, ItemStatus } from "../../types";
 import CustomSelect from "../ui/CustomSelect";
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { MediaItem, Moment, Connection } from "../types";
 import { TC, INK, PAPER, MUTED } from "../constants";
 import { Badge } from "../components/ui/UIHelpers";

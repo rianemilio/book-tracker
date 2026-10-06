@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 import type { MediaItem, Moment, Connection, Session } from "./types";
 import {
-  INK,
   INIT_ITEMS,
   INIT_MOMENTS,
   INIT_CONNS,

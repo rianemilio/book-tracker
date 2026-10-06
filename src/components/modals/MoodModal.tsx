@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import type { MediaItem } from "../../types";
 import { MOODS, CTXS, INK, PAPER, MUTED } from "../../constants";
 import CustomSelect from "../ui/CustomSelect";

@@ -1,4 +1,3 @@
-import React from "react";
 import type { MediaItem, Moment } from "../types";
 import { TC, INK } from "../constants";
 import { Badge, Pill } from "../components/ui/UIHelpers";
