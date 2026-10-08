@@ -3,6 +3,7 @@ import "./App.css";
 import { usePersistentState } from "./hooks/usePersistentState";
 import { withProgress } from "./utils/progress";
 import { isConnected } from "./utils/connections";
+import { nextId, randomId } from "./utils/ids";
 
 import type { MediaItem, Moment, Connection, Session } from "./types";
 import {
@@ -66,8 +67,7 @@ export default function App() {
         ),
       );
     } else {
-      const newItem: MediaItem = { ...data, id: Date.now() } as MediaItem;
-      setItems((prev) => [...prev, newItem]);
+      setItems((prev) => [...prev, { ...data, id: nextId(prev) } as MediaItem]);
     }
     setEditingItem(null);
     setShowNewItem(false);
@@ -88,7 +88,7 @@ export default function App() {
     toId: number;
     reason: string;
   }) => {
-    const newConn: Connection = { ...data, id: `c-${Date.now()}` };
+    const newConn: Connection = { ...data, id: randomId("c") };
     setConnections((prev) =>
       isConnected(prev, data.fromId, data.toId) ? prev : [...prev, newConn],
     );
@@ -115,7 +115,7 @@ export default function App() {
     setSessions((prev) => [
       ...prev,
       {
-        id: Date.now(),
+        id: nextId(prev),
         itemId,
         mood,
         ctx,
@@ -151,7 +151,7 @@ export default function App() {
           onSave={(d) => {
             setMoments((p) => [
               {
-                id: Date.now(),
+                id: nextId(p),
                 ...d,
                 sym: d.sym || "★",
                 createdAt: new Date().toISOString(),
