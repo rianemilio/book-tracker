@@ -1,16 +1,19 @@
 import { useState } from "react";
-import type { MediaItem } from "../../types";
+import type { Connection, MediaItem } from "../../types";
+import { isConnected } from "../../utils/connections";
 import CustomSelect from "../ui/CustomSelect";
 import Modal from "../ui/Modal";
 
 interface ConnectionModalProps {
   items: MediaItem[];
+  connections: Connection[];
   onSave: (data: { fromId: number; toId: number; reason: string }) => void;
   onClose: () => void;
 }
 
 export default function ConnectionModal({
   items,
+  connections,
   onSave,
   onClose,
 }: ConnectionModalProps) {
@@ -18,7 +21,8 @@ export default function ConnectionModal({
   const [toId, setToId] = useState<number>(items[1]?.id || 0);
   const [reason, setReason] = useState("");
 
-  const ok = fromId && toId && fromId !== toId && reason.trim();
+  const duplicate = isConnected(connections, fromId, toId);
+  const ok = fromId && toId && fromId !== toId && !duplicate && reason.trim();
 
   const itemOptions = items.map((item) => ({
     value: item.id,
@@ -49,6 +53,12 @@ export default function ConnectionModal({
         value={reason}
         onChange={(e) => setReason(e.target.value)}
       />
+
+      {duplicate && (
+        <p className="p-field-error" role="alert">
+          Essas obras já estão conectadas.
+        </p>
+      )}
 
       <button
         className="p-primary-btn"

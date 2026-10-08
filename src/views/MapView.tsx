@@ -65,6 +65,7 @@ export default function MapView({
       {showConnModal && (
         <ConnectionModal
           items={items}
+          connections={connections}
           onClose={() => setShowConnModal(false)}
           onSave={(data) => {
             onAddConnection(data);

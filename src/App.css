@@ -1266,3 +1266,10 @@ body {
   font-size: 12px;
   font-weight: bold;
 }
+
+.p-field-error {
+  color: #8b1a1a;
+  font-size: 12px;
+  font-weight: 800;
+  margin: -0.75rem 0 1rem;
+}

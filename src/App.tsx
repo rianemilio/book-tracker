@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { usePersistentState } from "./hooks/usePersistentState";
 import { withProgress } from "./utils/progress";
+import { isConnected } from "./utils/connections";
 
 import type { MediaItem, Moment, Connection, Session } from "./types";
 import {
@@ -88,7 +89,9 @@ export default function App() {
     reason: string;
   }) => {
     const newConn: Connection = { ...data, id: `c-${Date.now()}` };
-    setConnections((prev) => [...prev, newConn]);
+    setConnections((prev) =>
+      isConnected(prev, data.fromId, data.toId) ? prev : [...prev, newConn],
+    );
   };
 
   const handleDeleteConnection = (id: string) => {
