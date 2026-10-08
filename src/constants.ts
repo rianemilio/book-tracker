@@ -7,19 +7,6 @@ import type {
   MediaType,
 } from "./types";
 
-export const INK = "#0E0C0A";
-export const PAPER = "#F4EFE6";
-export const PAPER2 = "#EDE7D9";
-export const PAPER3 = "#C9C0AE";
-export const MUTED = "#6B6358";
-export const FAINT = "#A89F90";
-
-export const TC: Record<MediaType, string> = {
-  book: "#1A3A5C",
-  film: "#8B1A1A",
-  manga: "#2D5A27",
-};
-
 export const TL: Record<MediaType, string> = {
   book: "livro",
   film: "filme/série",
