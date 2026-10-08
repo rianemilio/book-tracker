@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { MediaItem, Moment, Connection } from "../types";
 import { Badge } from "../components/ui/UIHelpers";
 import ConnectionModal from "../components/modals/ConnectionModal";
+import { useMediaQuery } from "../hooks/useMediaQuery";
 
 interface MapViewProps {
   items: MediaItem[];
@@ -33,8 +34,11 @@ export default function MapView({
 
   // Raio cresce com a quantidade de obras para manter ~90px entre os nós
   const r = Math.max(108, Math.ceil((items.length * 90) / (2 * Math.PI)));
-  const width = Math.max(580, 2 * r + 100);
-  const height = Math.max(296, 2 * r + 60);
+  // No celular o desenho usa só o espaço que precisa, para não encolher os
+  // rótulos; em telas largas mantém a moldura mínima de 580x296
+  const compact = useMediaQuery("(max-width: 600px)");
+  const width = Math.max(compact ? 0 : 580, 2 * r + 100);
+  const height = Math.max(compact ? 0 : 296, 2 * r + 60);
   const cx = width / 2,
     cy = height / 2;
 

@@ -1371,3 +1371,165 @@ html::-webkit-scrollbar,
   font-weight: 800;
   margin: -0.75rem 0 1rem;
 }
+
+/* Tablet */
+@media (max-width: 900px) {
+  .p-item-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Celular */
+@media (max-width: 600px) {
+  /* Cabeçalho: logo em cima, ações dividindo a largura embaixo */
+  .p-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    padding: 1.75rem 1rem 2.25rem;
+  }
+
+  .p-logo {
+    font-size: 26px;
+  }
+
+  .p-logo-sub {
+    letter-spacing: 0.18em;
+  }
+
+  .p-header-actions {
+    gap: 10px;
+  }
+
+  .p-header-actions .p-reg-btn {
+    flex: 1;
+    padding: 10px 8px;
+    font-size: 10px;
+  }
+
+  .p-nav {
+    padding: 0.9rem 1rem 0.8rem;
+    gap: 8px;
+  }
+
+  .p-nav-btn {
+    flex: 1;
+    padding: 0.7rem 0.4rem;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .p-body {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  /* Início */
+  .p-stat-grid {
+    gap: 10px;
+    margin-bottom: 1.75rem;
+  }
+
+  .p-stat-card {
+    padding: 0.8rem 0.7rem;
+  }
+
+  .p-stat-label {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+
+  .p-stat-num {
+    font-size: 32px;
+  }
+
+  .p-insight-bar {
+    padding: 1rem 1.1rem;
+    gap: 12px;
+    margin-bottom: 1.75rem;
+  }
+
+  /* Filtros vão para a linha de baixo do título da seção */
+  .p-section-head {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+
+  .p-filter-row {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .p-filter-btn {
+    flex: 1;
+    padding: 8px 4px;
+  }
+
+  .p-item-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    margin-bottom: 1.75rem;
+  }
+
+  /* Alvos de toque maiores */
+  .p-ctrl-btn {
+    min-width: 40px;
+    min-height: 36px;
+    font-size: 11px;
+  }
+
+  .p-ctrl-edit {
+    padding: 8px 0 8px 8px;
+  }
+
+  .p-recent-inner {
+    flex-wrap: wrap;
+  }
+
+  /* Mapa e momentos */
+  .p-view-head .p-section-head {
+    flex-wrap: nowrap;
+  }
+
+  .p-view-head .p-ghost-btn {
+    padding: 8px 12px;
+  }
+
+  .p-map-bg {
+    padding: 0.5rem;
+  }
+
+  .p-conn-card {
+    padding: 1.1rem;
+  }
+
+  .p-moment-inner {
+    padding: 1rem 1.1rem;
+  }
+
+  .p-moment-head {
+    flex-wrap: wrap;
+  }
+
+  /* Modais */
+  .p-modal-overlay {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .p-modal-top {
+    padding: 1.4rem 1.25rem 1.8rem;
+  }
+
+  .p-modal-body {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .p-modal-title {
+    font-size: 22px;
+  }
+
+  /* Abaixo de 16px o iOS dá zoom ao focar o campo */
+  .p-field-input,
+  .p-field-textarea {
+    font-size: 16px;
+  }
+}
