@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./App.css";
+import "./styles/index.css";
 import { usePersistentState } from "./hooks/usePersistentState";
 import { withProgress } from "./utils/progress";
 import { isConnected } from "./utils/connections";

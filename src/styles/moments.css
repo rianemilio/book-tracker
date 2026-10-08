@@ -1,0 +1,73 @@
+.p-moment-card {
+  background: var(--paper-2);
+  margin-bottom: 18px;
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0px currentColor;
+  transform: rotate(-0.5deg) skewX(-1deg);
+  outline: 1px solid transparent;
+}
+
+.p-moment-inner {
+  padding: 1.2rem 1.5rem;
+}
+
+.p-moment-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.p-moment-title {
+  font-weight: 900;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink);
+  font-family: Georgia, serif;
+}
+
+.p-quote-text {
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink);
+  padding-left: 14px;
+  border-left: 3px solid var(--ink);
+  margin-bottom: 12px;
+  font-family: Georgia, serif;
+}
+
+.p-moment-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.p-meta-sym {
+  font-size: 18px;
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+}
+
+/* Cinza por padrão (referência no cabeçalho do card); preto no rodapé */
+.p-meta-txt {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.p-moment-meta .p-meta-sym,
+.p-moment-meta .p-meta-txt {
+  color: var(--ink);
+}
+
+@media (max-width: 600px) {
+  .p-moment-inner {
+    padding: 1rem 1.1rem;
+  }
+
+  .p-moment-head {
+    flex-wrap: wrap;
+  }
+}

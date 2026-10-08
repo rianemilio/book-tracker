@@ -1,0 +1,194 @@
+/* Moldura do grafo */
+.p-map-bg {
+  background: var(--paper-2);
+  padding: 1.5rem;
+  margin-bottom: 20px;
+  border: 3px solid var(--ink);
+  box-shadow: 8px 8px 0px var(--ink);
+  transform: rotate(0.5deg);
+  position: relative;
+}
+
+/* Textura de papel */
+.p-map-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.01),
+    rgba(0, 0, 0, 0.01) 3px,
+    transparent 3px,
+    transparent 9px
+  );
+  pointer-events: none;
+}
+
+.p-map-svg {
+  width: 100%;
+  display: block;
+}
+
+/* Nós; o selecionado vem de aria-pressed */
+.p-map-node {
+  cursor: pointer;
+}
+
+.p-map-node:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 2px;
+}
+
+.p-map-node path {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.p-map-node text {
+  fill: var(--ink);
+}
+
+.p-map-node[aria-pressed="true"] path {
+  fill: var(--type-color);
+  stroke-width: 3;
+}
+
+.p-map-node[aria-pressed="true"] text {
+  fill: var(--paper);
+}
+
+/* Conexões entre obras */
+.p-map-link {
+  stroke: var(--ink);
+  stroke-width: 1;
+  opacity: 0.2;
+  stroke-dasharray: 3 3;
+}
+
+.p-map-link.is-active {
+  stroke: var(--red);
+  stroke-width: 3;
+  opacity: 0.9;
+  stroke-dasharray: none;
+}
+
+/* Raios do centro ("você") até cada obra */
+.p-map-spoke {
+  stroke: var(--ink);
+  stroke-width: 0.5;
+  opacity: 0.15;
+  stroke-dasharray: 4 4;
+}
+
+.p-map-spoke.is-active {
+  stroke: var(--type-color);
+  stroke-width: 2;
+  opacity: 0.8;
+}
+
+.p-map-center {
+  fill: var(--ink);
+}
+
+.p-map-center-label {
+  fill: var(--paper);
+}
+
+/* Card de detalhes da obra selecionada */
+.p-conn-card {
+  background: var(--paper);
+  padding: 1.5rem;
+  margin-bottom: 14px;
+  display: flex;
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0px currentColor;
+  transform: skewX(-2deg);
+}
+
+.p-conn-body {
+  flex: 1;
+  padding-left: 6px;
+}
+
+.p-conn-title {
+  font-size: 22px;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--ink);
+  margin-bottom: 4px;
+  font-family: Georgia, serif;
+}
+
+.p-conn-author {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+
+.p-conn-label {
+  margin-bottom: 10px;
+}
+
+.p-conn-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.p-conn-tag {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper);
+  padding: 4px 10px;
+  transform: skewX(-8deg);
+  border: 1px solid var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.p-del-conn {
+  background: transparent;
+  border: none;
+  color: var(--paper);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.p-conn-empty {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.p-conn-highlight {
+  padding-top: 14px;
+  border-top: 2px dashed var(--ink);
+  margin-top: 14px;
+}
+
+.p-conn-highlight .p-field-label {
+  margin-bottom: 6px;
+}
+
+.p-conn-quote {
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--ink);
+  font-family: Georgia, serif;
+}
+
+@media (max-width: 600px) {
+  .p-map-bg {
+    padding: 0.5rem;
+  }
+
+  .p-conn-card {
+    padding: 1.1rem;
+  }
+}

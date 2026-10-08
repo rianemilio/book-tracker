@@ -46,14 +46,18 @@ src/
   views/             abas: início, mapa e momentos
   components/modals/ formulários de obra, sessão, momento e conexão
   components/ui/     Modal, CustomSelect, pickers e helpers visuais
-  hooks/             usePersistentState (useState + localStorage)
-  utils/             regras de progresso e formatação de datas
+  hooks/             usePersistentState (useState + localStorage), useMediaQuery
+  storage/           validação dos dados salvos e versão/migrações do formato
+  utils/             regras de progresso, conexões, ids e datas
+  styles/            CSS por área, importado em ordem por index.css
   test/              setup compartilhado dos testes (Vitest + Testing Library)
   constants.ts       rótulos, humores, contextos, tags e dados de exemplo
   types.ts           tipos do domínio
 ```
 
-Os testes ficam ao lado do código que testam (`*.test.ts(x)`). Os estilos ficam em `App.css`: a paleta é definida em variáveis CSS no `:root`, e a cor de cada tipo de obra vem de `data-type` e da variável `--type-color`.
+Os testes ficam ao lado do código que testam (`*.test.ts(x)`).
+
+Os estilos ficam em `src/styles/`, um arquivo por área (botões, formulários, layout, cada aba...), cada um com as próprias regras de celular no fim. A paleta é definida em variáveis CSS em `tokens.css`, e a cor de cada tipo de obra vem de `data-type` e da variável `--type-color`.
 
 ## Créditos e licença
 

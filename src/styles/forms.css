@@ -1,0 +1,245 @@
+/* Campos */
+.p-field-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 6px;
+  display: block;
+  font-weight: 900;
+}
+
+.p-field-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid var(--ink);
+  padding: 8px 0;
+  font-size: 15px;
+  color: var(--ink);
+  outline: none;
+  margin-bottom: 1.5rem;
+  font-family: Georgia, serif;
+}
+
+.p-field-textarea {
+  width: 100%;
+  background: transparent;
+  border: 3px solid var(--ink);
+  padding: 12px;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  resize: none;
+  margin-bottom: 1.5rem;
+  line-height: 1.75;
+  font-family: Georgia, serif;
+}
+
+.p-field-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.p-field-error {
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 800;
+  margin: -0.75rem 0 1rem;
+}
+
+/* Atualização de progresso no registro de sessão */
+.p-progress-box {
+  background: rgba(14, 12, 10, 0.05);
+  padding: 10px;
+  margin-bottom: 1.5rem;
+  border: 2px solid var(--ink);
+}
+
+.p-progress-box .p-field-label {
+  margin-bottom: 4px;
+}
+
+.p-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.p-progress-row .p-field-input {
+  margin-bottom: 0;
+  width: 80px;
+}
+
+.p-progress-total {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Seletores de humor e chips; o selecionado vem de aria-pressed */
+.p-mood-grid,
+.p-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.p-mood-btn,
+.p-chip {
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  border: 2px solid var(--ink);
+  border-radius: 1px;
+  box-shadow:
+    1px 1px 0px var(--ink),
+    2px 2px 0px var(--ink),
+    3px 3px 0px var(--ink);
+  transform: skewX(-8deg);
+  transition: all 0.12s;
+  font-family: inherit;
+  outline: 1px solid transparent;
+}
+
+.p-mood-btn {
+  padding: 10px 12px;
+  text-align: center;
+  min-width: 64px;
+}
+
+.p-chip {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.p-mood-btn:hover {
+  transform: skewX(-8deg) translateY(-2px);
+}
+
+.p-mood-btn:focus-visible,
+.p-chip:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
+}
+
+.p-mood-btn[aria-pressed="true"],
+.p-chip[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.p-mood-sym {
+  font-size: 18px;
+  line-height: 1;
+  margin-bottom: 4px;
+  font-family: "Courier New", monospace;
+  display: block;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+.p-mood-key {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: block;
+  color: var(--ink);
+}
+
+.p-mood-btn[aria-pressed="true"] .p-mood-sym,
+.p-mood-btn[aria-pressed="true"] .p-mood-key {
+  color: var(--paper);
+}
+
+/* Select customizado */
+.p-custom-select-container {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.p-custom-select-trigger {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid var(--ink);
+  padding: 8px 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  font-family: Georgia, serif;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.p-custom-select-trigger::after {
+  content: "▼";
+  font-size: 10px;
+  color: var(--red);
+  transition: transform 0.15s ease-in-out;
+}
+
+.p-custom-select-container.open .p-custom-select-trigger::after {
+  transform: rotate(180deg);
+}
+
+.p-custom-select-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow:
+    inset 0 0 0 1px var(--ink),
+    0 0 0 1px var(--ink),
+    6px 6px 0px var(--red);
+  z-index: 110;
+  margin-top: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  outline: none;
+}
+
+.p-custom-select-dropdown::-webkit-scrollbar {
+  display: none;
+}
+
+.p-custom-select-option {
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--paper);
+}
+
+.p-custom-select-option:hover,
+.p-custom-select-option.active {
+  background: var(--red);
+  color: var(--paper);
+}
+
+.p-custom-select-option.selected {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+@media (max-width: 600px) {
+  /* Abaixo de 16px o iOS dá zoom ao focar o campo */
+  .p-field-input,
+  .p-field-textarea {
+    font-size: 16px;
+  }
+}

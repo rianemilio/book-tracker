@@ -1,0 +1,29 @@
+/* Etiqueta do tipo de obra (livro, filme/série, mangá/HQ) */
+.p-type-badge {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  margin-bottom: 10px;
+  display: inline-block;
+  border: 2px solid currentColor;
+  transform: skewX(-10deg);
+  background: var(--paper);
+  align-self: flex-start;
+  outline: 1px solid transparent;
+}
+
+/* Tag do momento ("me fez chorar") */
+.p-pill {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper);
+  padding: 4px 12px;
+  transform: skewX(-10deg);
+  margin-left: auto;
+  border: 2px solid var(--ink);
+  outline: 1px solid transparent;
+}

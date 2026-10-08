@@ -1,0 +1,219 @@
+/* Cabeçalho */
+.p-header-container {
+  position: relative;
+  padding-bottom: 10px;
+  margin-bottom: 1.5rem;
+}
+
+/* Faixa vermelha que aparece por baixo do corte diagonal do cabeçalho */
+.p-header-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), 0 100%);
+  z-index: 1;
+}
+
+.p-header {
+  background: var(--ink);
+  padding: 2.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), 0 100%);
+  position: relative;
+  z-index: 2;
+}
+
+.p-logo {
+  font-family: Georgia, serif;
+  font-size: 32px;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--paper);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0px var(--red);
+}
+
+.p-logo-sub {
+  font-size: 10px;
+  color: rgba(244, 239, 230, 0.6);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  font-weight: 800;
+}
+
+.p-header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Abas */
+.p-nav {
+  background: #1a1714;
+  display: flex;
+  padding: 1.2rem 2rem 1rem;
+  border-top: 4px solid var(--ink);
+  border-bottom: 4px solid var(--ink);
+  box-shadow: 0 4px 0px var(--red);
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.p-nav-btn {
+  padding: 0.8rem 1.8rem;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border: 3px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.15s;
+  transform: skewX(-12deg) rotate(-1deg) translateZ(0);
+  outline: 1px solid transparent;
+}
+
+.p-nav-btn.active {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 4px 4px 0px var(--red);
+}
+
+.p-nav-btn:not(.active) {
+  background: var(--ink);
+  color: rgba(244, 239, 230, 0.5);
+  border-color: rgba(244, 239, 230, 0.2);
+}
+
+.p-nav-btn:not(.active):hover {
+  color: var(--paper);
+  background: var(--green);
+  border-color: var(--ink);
+  transform: skewX(-12deg) rotate(-2deg) translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--ink);
+}
+
+.p-body {
+  padding: 2.5rem 2rem 4rem;
+  background: var(--paper);
+}
+
+/* Título de seção: rótulo, linha e ação opcional à direita */
+.p-section-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 1.5rem;
+}
+
+.p-section-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: 6px 16px;
+  transform: skewX(-10deg);
+  font-weight: 900;
+  display: inline-block;
+  box-shadow: 3px 3px 0 var(--red);
+}
+
+.p-section-line {
+  flex: 1;
+  height: 4px;
+  background: var(--ink);
+  transform: skewX(-10deg);
+}
+
+.p-filter-row {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+/* Cabeçalho das abas Mapa e Momentos */
+.p-view-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.p-view-head .p-section-head {
+  margin: 0;
+  flex: 1;
+}
+
+.p-view-head .p-ghost-btn {
+  margin-left: 14px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  /* Logo em cima, ações dividindo a largura embaixo */
+  .p-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    padding: 1.75rem 1rem 2.25rem;
+  }
+
+  .p-logo {
+    font-size: 26px;
+  }
+
+  .p-logo-sub {
+    letter-spacing: 0.18em;
+  }
+
+  .p-header-actions {
+    gap: 10px;
+  }
+
+  .p-header-actions .p-reg-btn {
+    flex: 1;
+    padding: 10px 8px;
+    font-size: 10px;
+  }
+
+  .p-nav {
+    padding: 0.9rem 1rem 0.8rem;
+    gap: 8px;
+  }
+
+  .p-nav-btn {
+    flex: 1;
+    padding: 0.7rem 0.4rem;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .p-body {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  /* Filtros vão para a linha de baixo do título da seção */
+  .p-section-head {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+
+  .p-filter-row {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .p-view-head .p-section-head {
+    flex-wrap: nowrap;
+  }
+
+  .p-view-head .p-ghost-btn {
+    padding: 8px 12px;
+  }
+}

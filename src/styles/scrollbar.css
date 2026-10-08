@@ -1,0 +1,47 @@
+/* Barra de rolagem desenhada pelo EdgeScrollbar; só aparece com o mouse no
+   canto direito da tela */
+.p-edge-scroll {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 100vh;
+  z-index: 150; /* abaixo dos modais */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.p-edge-scroll.is-visible[data-scrollable="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.p-edge-scroll-thumb {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  width: 9px;
+  background: var(--ink);
+  border: 2px solid var(--paper);
+  box-shadow: 2px 2px 0 var(--red);
+  cursor: grab;
+  touch-action: none;
+  transition: background 0.15s;
+}
+
+.p-edge-scroll-thumb:hover,
+.p-edge-scroll.is-dragging .p-edge-scroll-thumb {
+  background: var(--red);
+}
+
+.p-edge-scroll.is-dragging .p-edge-scroll-thumb {
+  cursor: grabbing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-edge-scroll,
+  .p-edge-scroll-thumb {
+    transition: none;
+  }
+}

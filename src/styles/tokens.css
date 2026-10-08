@@ -1,0 +1,37 @@
+/* Paleta */
+:root {
+  --ink: #0e0c0a;
+  --paper: #f4efe6;
+  --paper-2: #ede7d9;
+  --paper-3: #c9c0ae;
+  --muted: #6b6358;
+  --faint: #a89f90;
+  --red: #8b1a1a;
+  --blue: #1a3a5c;
+  --green: #2d5a27;
+}
+
+/* Cor de cada tipo de obra */
+[data-type="book"] {
+  --type-color: var(--blue);
+}
+[data-type="film"] {
+  --type-color: var(--red);
+}
+[data-type="manga"] {
+  --type-color: var(--green);
+}
+
+.p-stat-card,
+.p-item-card,
+.p-recent-item,
+.p-moment-card,
+.p-conn-card,
+.p-type-badge {
+  color: var(--type-color);
+}
+
+.p-pill,
+.p-conn-tag {
+  background: var(--type-color);
+}

@@ -1,0 +1,229 @@
+/* Os elementos inclinados recebem um outline transparente para suavizar as
+   bordas no Chrome */
+
+/* Ações do cabeçalho */
+.p-reg-btn {
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  padding: 12px 20px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  transform: rotate(-2deg) skewX(-10deg) translateZ(0);
+  box-shadow:
+    0 0 0 1px var(--ink),
+    4px 4px 0px var(--red);
+  outline: 1px solid transparent;
+}
+
+.p-reg-btn:hover {
+  transform: rotate(0deg) skewX(-6deg) translate3d(2px, 2px, 0);
+  box-shadow:
+    0 0 0 1px var(--ink),
+    2px 2px 0px var(--red);
+}
+
+.p-reg-btn.secondary {
+  background: var(--red);
+  color: var(--paper);
+  box-shadow: 4px 4px 0px var(--blue);
+}
+
+.p-reg-btn.secondary:hover {
+  box-shadow: 2px 2px 0px var(--blue);
+}
+
+/* Botão de contorno (ações das abas) */
+.p-ghost-btn {
+  background: transparent;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  padding: 8px 18px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transform: skewX(-8deg);
+  box-shadow: 3px 3px 0px var(--ink);
+  transition: all 0.1s;
+  outline: 1px solid transparent;
+}
+
+.p-ghost-btn:hover {
+  transform: skewX(-8deg) translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--ink);
+}
+
+/* Envio de formulário */
+.p-primary-btn {
+  background: var(--ink);
+  color: var(--paper);
+  border: 3px solid var(--ink);
+  padding: 14px 24px;
+  font-size: 12px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transform: skewX(-10deg) translateZ(0);
+  box-shadow:
+    0 0 0 1px var(--ink),
+    5px 5px 0px var(--red);
+  outline: 1px solid transparent;
+}
+
+.p-primary-btn:disabled {
+  background: var(--paper-3);
+  color: var(--faint);
+  cursor: not-allowed;
+  box-shadow: none;
+  border-color: var(--paper-3);
+}
+
+.p-danger-btn {
+  background: var(--red);
+  color: var(--paper);
+  border: 3px solid var(--ink);
+  padding: 8px 12px;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  width: 100%;
+  transform: skewX(-8deg);
+  box-shadow: 3px 3px 0px var(--ink);
+}
+
+/* Link em texto ("ver todos") */
+.p-link-btn {
+  flex-shrink: 0;
+  margin-left: 10px;
+  background: none;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Controles pequenos dos cards (+1, +10, ajustar, excluir) */
+.p-ctrl-btn {
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  font-size: 10px;
+  font-weight: 900;
+  padding: 4px 6px;
+  cursor: pointer;
+  transform: skewX(-8deg);
+  transition: all 0.1s;
+}
+
+.p-ctrl-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.p-ctrl-edit {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 800;
+  cursor: pointer;
+  color: var(--muted);
+  text-decoration: underline;
+}
+
+.p-ctrl-edit:hover {
+  color: var(--ink);
+}
+
+.p-ctrl-edit--plain {
+  text-decoration: none;
+}
+
+/* Área tracejada de "adicionar"; --static é só o estado vazio, sem ação */
+.p-drip-add {
+  display: block;
+  width: 100%;
+  font-family: inherit;
+  border: 3px dashed var(--ink);
+  background: rgba(201, 192, 174, 0.2);
+  padding: 1.6rem;
+  text-align: center;
+  cursor: pointer;
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  margin-top: 8px;
+  transform: skewX(-3deg);
+  transition: background 0.2s;
+}
+
+.p-drip-add:hover {
+  background: rgba(201, 192, 174, 0.4);
+}
+
+.p-drip-add:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
+}
+
+.p-drip-add--static {
+  cursor: default;
+}
+
+/* Filtros; o selecionado vem de aria-pressed */
+.p-filter-btn {
+  padding: 6px 14px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 2px solid var(--ink);
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.12s;
+  transform: skewX(-8deg);
+  outline: 1px solid transparent;
+}
+
+.p-filter-btn:hover {
+  transform: skewX(-8deg) translateY(-2px);
+}
+
+.p-filter-btn[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+@media (max-width: 600px) {
+  .p-filter-btn {
+    flex: 1;
+    padding: 8px 4px;
+  }
+
+  /* Alvos de toque maiores */
+  .p-ctrl-btn {
+    min-width: 40px;
+    min-height: 36px;
+    font-size: 11px;
+  }
+
+  .p-ctrl-edit {
+    padding: 8px 0 8px 8px;
+  }
+}

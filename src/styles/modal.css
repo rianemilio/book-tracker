@@ -1,0 +1,100 @@
+.p-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 12, 10, 0.9);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 3rem 1rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.p-modal-overlay::-webkit-scrollbar {
+  display: none;
+}
+
+.p-modal-box {
+  background: var(--paper);
+  background-clip: padding-box;
+  width: 100%;
+  max-width: 460px;
+  border: 4px solid var(--ink);
+  box-shadow:
+    0 0 0 1px var(--ink),
+    12px 12px 0px var(--red);
+  transform: rotate(-1.5deg);
+  outline: 1px solid transparent;
+}
+
+.p-modal-top {
+  background: var(--ink);
+  padding: 1.8rem 2rem 2.2rem;
+  position: relative;
+  margin: -4px -4px 0 -4px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), 0 100%);
+}
+
+.p-modal-eyebrow {
+  font-size: 10px;
+  color: rgba(244, 239, 230, 0.6);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 800;
+}
+
+.p-modal-title {
+  font-size: 26px;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--paper);
+  font-family: Georgia, serif;
+  line-height: 1.1;
+}
+
+/* "+" girado 45° vira um "×" */
+.p-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: var(--red);
+  border: 2px solid var(--paper);
+  font-size: 20px;
+  color: var(--paper);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  transform: rotate(45deg);
+}
+
+.p-modal-close:hover {
+  background: var(--ink);
+}
+
+.p-modal-body {
+  padding: 2rem;
+}
+
+@media (max-width: 600px) {
+  .p-modal-overlay {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .p-modal-top {
+    padding: 1.4rem 1.25rem 1.8rem;
+  }
+
+  .p-modal-body {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .p-modal-title {
+    font-size: 22px;
+  }
+}
