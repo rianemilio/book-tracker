@@ -30,6 +30,7 @@ import MomentsView from "./views/MomentsView";
 import MoodModal from "./components/modals/MoodModal";
 import MomentModal from "./components/modals/MomentModal";
 import ItemModal from "./components/modals/ItemModal";
+import EdgeScrollbar from "./components/ui/EdgeScrollbar";
 
 export default function App() {
   const [tab, setTab] = useState<"home" | "map" | "moments">("home");
@@ -259,6 +260,8 @@ export default function App() {
           />
         )}
       </div>
+
+      <EdgeScrollbar />
     </>
   );
 }

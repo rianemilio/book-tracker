@@ -919,32 +919,63 @@ body {
   font-weight: 500;
 }
 
-/* Scrollbar  */
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+/* Barra de rolagem: a nativa fica escondida para não cortar o layout (a
+   rolagem continua funcionando). A da página é desenhada pelo EdgeScrollbar
+   e só aparece com o mouse no canto direito. */
+html,
+.p-modal-overlay {
+  scrollbar-width: none;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--paper-2);
-  border-left: 3px solid var(--ink);
+html::-webkit-scrollbar,
+.p-modal-overlay::-webkit-scrollbar {
+  display: none;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--red);
-  border: 3px solid var(--ink);
-  transition: background 0.2s;
-  image-rendering: -webkit-optimize-contrast;
+.p-edge-scroll {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 100vh;
+  z-index: 150; /* abaixo dos modais */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.p-edge-scroll.is-visible[data-scrollable="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.p-edge-scroll-thumb {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  width: 9px;
   background: var(--ink);
+  border: 2px solid var(--paper);
+  box-shadow: 2px 2px 0 var(--red);
+  cursor: grab;
+  touch-action: none;
+  transition: background 0.15s;
 }
 
-/* Para navegadores Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--red) var(--paper-2);
+.p-edge-scroll-thumb:hover,
+.p-edge-scroll.is-dragging .p-edge-scroll-thumb {
+  background: var(--red);
+}
+
+.p-edge-scroll.is-dragging .p-edge-scroll-thumb {
+  cursor: grabbing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-edge-scroll,
+  .p-edge-scroll-thumb {
+    transition: none;
+  }
 }
 
 .p-custom-select-container {
