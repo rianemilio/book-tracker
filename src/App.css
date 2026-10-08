@@ -1201,6 +1201,60 @@ body {
   cursor: pointer;
 }
 
+.p-map-node path {
+  fill: #f4efe6;
+  stroke: #0e0c0a;
+  stroke-width: 1.5;
+}
+
+.p-map-node text {
+  fill: #0e0c0a;
+}
+
+.p-map-node[aria-pressed="true"] path {
+  fill: var(--type-color);
+  stroke-width: 3;
+}
+
+.p-map-node[aria-pressed="true"] text {
+  fill: #f4efe6;
+}
+
+.p-map-link {
+  stroke: #0e0c0a;
+  stroke-width: 1;
+  opacity: 0.2;
+  stroke-dasharray: 3 3;
+}
+
+.p-map-link.is-active {
+  stroke: #8b1a1a;
+  stroke-width: 3;
+  opacity: 0.9;
+  stroke-dasharray: none;
+}
+
+.p-map-spoke {
+  stroke: #0e0c0a;
+  stroke-width: 0.5;
+  opacity: 0.15;
+  stroke-dasharray: 4 4;
+}
+
+.p-map-spoke.is-active {
+  stroke: var(--type-color);
+  stroke-width: 2;
+  opacity: 0.8;
+}
+
+.p-map-center {
+  fill: #0e0c0a;
+}
+
+.p-map-center-label {
+  fill: #f4efe6;
+}
+
 .p-map-node:focus-visible {
   outline: 3px solid #8b1a1a;
   outline-offset: 2px;

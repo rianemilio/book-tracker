@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { MediaItem, Moment, Connection } from "../types";
-import { TC, INK, PAPER } from "../constants";
 import { Badge } from "../components/ui/UIHelpers";
 import ConnectionModal from "../components/modals/ConnectionModal";
 
@@ -92,14 +91,11 @@ export default function MapView({
                 return (
                   <line
                     key={conn.id}
+                    className={`p-map-link${active ? " is-active" : ""}`}
                     x1={nodeA.x}
                     y1={nodeA.y}
                     x2={nodeB.x}
                     y2={nodeB.y}
-                    stroke={active ? "#8B1A1A" : INK}
-                    strokeWidth={active ? 3 : 1}
-                    opacity={active ? 0.9 : 0.2}
-                    strokeDasharray={active ? "" : "3 3"}
                   />
                 );
               })}
@@ -108,27 +104,25 @@ export default function MapView({
               {nodes.map((n) => (
                 <line
                   key={`v-${n.id}`}
+                  className={`p-map-spoke${sel?.id === n.id ? " is-active" : ""}`}
+                  data-type={n.type}
                   x1={cx}
                   y1={cy}
                   x2={n.x}
                   y2={n.y}
-                  stroke={sel?.id === n.id ? TC[n.type] : INK}
-                  strokeWidth={sel?.id === n.id ? 2 : 0.5}
-                  opacity={sel?.id === n.id ? 0.8 : 0.15}
-                  strokeDasharray="4 4"
                 />
               ))}
 
               {/* Formas orgânicas dos nós */}
               {nodes.map((n) => {
                 const active = sel?.id === n.id;
-                const c = TC[n.type];
                 const lbl =
                   n.title.length > 11 ? n.title.slice(0, 10) + "…" : n.title;
                 return (
                   <g
                     key={n.id}
                     className="p-map-node"
+                    data-type={n.type}
                     role="button"
                     tabIndex={0}
                     aria-label={n.title}
@@ -149,9 +143,6 @@ export default function MapView({
                       C ${n.x + 18},${n.y + 18} ${n.x - 18},${n.y + 16} ${n.x - 32},${n.y + 14} 
                       C ${n.x - 44},${n.y + 6} ${n.x - 42},${n.y - 4} ${n.x - 38},${n.y - 10} Z
                     `}
-                      fill={active ? c : PAPER}
-                      stroke={INK}
-                      strokeWidth={active ? 3 : 1.5}
                     />
                     <text
                       x={n.x}
@@ -160,7 +151,6 @@ export default function MapView({
                       fontSize={9}
                       fontFamily="'Helvetica Neue',Arial,sans-serif"
                       letterSpacing=".04em"
-                      fill={active ? PAPER : INK}
                       fontWeight={900}
                     >
                       {lbl}
@@ -171,6 +161,7 @@ export default function MapView({
 
               {/* Centro do Grafo */}
               <path
+                className="p-map-center"
                 d={`
                 M ${cx - 24},${cy - 8} 
                 C ${cx - 15},${cy - 18} ${cx + 15},${cy - 16} ${cx + 24},${cy - 8} 
@@ -178,15 +169,14 @@ export default function MapView({
                 C ${cx + 10},${cy + 16} ${cx - 10},${cy + 14} ${cx - 18},${cy + 12} 
                 C ${cx - 26},${cy + 6} ${cx - 28},${cy - 4} ${cx - 24},${cy - 8} Z
               `}
-                fill={INK}
               />
               <text
+                className="p-map-center-label"
                 x={cx}
                 y={cy + 4}
                 textAnchor="middle"
                 fontSize={9}
                 fontFamily="'Helvetica Neue',Arial,sans-serif"
-                fill={PAPER}
                 letterSpacing=".12em"
                 fontWeight={900}
               >
