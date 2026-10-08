@@ -4,6 +4,14 @@ import { usePersistentState } from "./hooks/usePersistentState";
 import { withProgress } from "./utils/progress";
 import { isConnected } from "./utils/connections";
 import { nextId, randomId } from "./utils/ids";
+import { STORAGE_PREFIX } from "./storage/schema";
+import {
+  arrayOf,
+  isConnection,
+  isMediaItem,
+  isMoment,
+  isSession,
+} from "./storage/validate";
 
 import type { MediaItem, Moment, Connection, Session } from "./types";
 import {
@@ -27,23 +35,27 @@ export default function App() {
   const [tab, setTab] = useState<"home" | "map" | "moments">("home");
 
   const [items, setItems] = usePersistentState<MediaItem[]>(
-    "paginas_cenas_items",
+    `${STORAGE_PREFIX}items`,
     INIT_ITEMS,
+    arrayOf(isMediaItem),
   );
 
   const [moments, setMoments] = usePersistentState<Moment[]>(
-    "paginas_cenas_moments",
+    `${STORAGE_PREFIX}moments`,
     INIT_MOMENTS,
+    arrayOf(isMoment),
   );
 
   const [sessions, setSessions] = usePersistentState<Session[]>(
-    "paginas_cenas_sessions",
+    `${STORAGE_PREFIX}sessions`,
     INIT_SESSIONS,
+    arrayOf(isSession),
   );
 
   const [connections, setConnections] = usePersistentState<Connection[]>(
-    "paginas_cenas_connections",
+    `${STORAGE_PREFIX}connections`,
     INIT_CONNS,
+    arrayOf(isConnection),
   );
 
   const [showMood, setShowMood] = useState(false);
