@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { INIT_ITEMS } from "../../constants";
+import { INIT_ITEMS } from "../../data/seed";
 import ConnectionModal from "./ConnectionModal";
 
 // INIT_ITEMS[0] e [1] são Berserk (1) e O Senhor dos Anéis (2)

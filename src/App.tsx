@@ -19,7 +19,7 @@ import {
   INIT_MOMENTS,
   INIT_CONNS,
   INIT_SESSIONS,
-} from "./constants";
+} from "./data/seed";
 
 // Importação das Views
 import HomeView from "./views/HomeView";

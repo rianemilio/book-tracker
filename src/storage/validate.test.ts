@@ -4,7 +4,7 @@ import {
   INIT_ITEMS,
   INIT_MOMENTS,
   INIT_SESSIONS,
-} from "../constants";
+} from "../data/seed";
 import {
   arrayOf,
   isConnection,
