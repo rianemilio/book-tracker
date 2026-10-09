@@ -42,16 +42,20 @@ podman run --rm -v "$PWD":/app:z -w /app node:22-alpine sh -c "npm ci && npm run
 
 ```
 src/
-  App.tsx            estado global, persistência e handlers
+  App.tsx            monta a tela: cabeçalho, aba ativa e modal aberto
   views/             abas: início, mapa e momentos
+  components/home/   seções da aba início (contadores, cards, momentos)
+  components/map/    grafo SVG e card de detalhes da aba mapa
+  components/layout/ cabeçalho e abas
   components/modals/ formulários de obra, sessão, momento e conexão
-  components/ui/     Modal, CustomSelect, pickers e helpers visuais
-  hooks/             usePersistentState (useState + localStorage), useMediaQuery
+  components/ui/     Modal, CustomSelect, pickers, barra de rolagem e helpers
+  hooks/             useLibrary (dados e operações), usePersistentState, useMediaQuery
+  data/              dados de exemplo da primeira visita
   storage/           validação dos dados salvos e versão/migrações do formato
-  utils/             regras de progresso, conexões, ids e datas
+  utils/             regras de progresso, conexões, ids, datas e layout do mapa
   styles/            CSS por área, importado em ordem por index.css
   test/              setup compartilhado dos testes (Vitest + Testing Library)
-  constants.ts       rótulos, humores, contextos, tags e dados de exemplo
+  constants.ts       rótulos, humores, contextos e tags
   types.ts           tipos do domínio
 ```
 
