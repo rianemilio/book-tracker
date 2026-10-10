@@ -82,6 +82,19 @@ describe("App", () => {
     expect(stored("items")[0]).toMatchObject({ progress: 305 });
   });
 
+  it("moves a finished work to the done list", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const inDoneList = () =>
+      screen.getAllByText("Berserk").some((el) => el.closest(".p-done-list"));
+    expect(inDoneList()).toBe(false);
+    const card = cardFor("Berserk");
+    for (let i = 0; i < 6; i++) {
+      await user.click(card.getByRole("button", { name: "+10" }));
+    }
+    expect(inDoneList()).toBe(true);
+  });
+
   it("edits and deletes a session from the history tab", async () => {
     const user = userEvent.setup();
     render(<App />);

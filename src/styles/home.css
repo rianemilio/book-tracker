@@ -247,6 +247,15 @@
   font-weight: 500;
 }
 
+/* Obras concluídas */
+.p-done-list {
+  margin-bottom: 2.5rem;
+}
+
+.p-done-inner {
+  align-items: center;
+}
+
 @media (max-width: 900px) {
   .p-item-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

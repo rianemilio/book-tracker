@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { MediaItem, Moment, Session, MediaType } from "../types";
 import { SectionHead } from "../components/ui/UIHelpers";
+import DoneList from "../components/home/DoneList";
 import ItemCard from "../components/home/ItemCard";
 import LastSession from "../components/home/LastSession";
 import RecentMoments from "../components/home/RecentMoments";
@@ -33,9 +34,9 @@ export default function HomeView({
   onQuickProgress,
 }: HomeViewProps) {
   const [filter, setFilter] = useState<Filter>("all");
-  const reading = items.filter(
-    (i) => i.status === "reading" && (filter === "all" || i.type === filter),
-  );
+  const shown = items.filter((i) => filter === "all" || i.type === filter);
+  const reading = shown.filter((i) => i.status === "reading");
+  const done = shown.filter((i) => i.status === "done");
   const lastSession = sessions[sessions.length - 1];
 
   return (
@@ -78,6 +79,13 @@ export default function HomeView({
             />
           ))}
         </div>
+      )}
+
+      {items.some((i) => i.status === "done") && (
+        <>
+          <SectionHead>concluídas</SectionHead>
+          <DoneList items={done} onEdit={onEditItem} />
+        </>
       )}
 
       <SectionHead
