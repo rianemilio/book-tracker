@@ -2,7 +2,7 @@
 
 Diário de leituras e sessões para livros, filmes/séries e mangás/HQs. Registre o progresso de cada obra, o humor e o contexto de cada sessão, guarde os momentos que marcaram e ligue obras entre si num mapa de conexões temáticas.
 
-Os dados ficam no `localStorage` do navegador. Não há backend.
+Os dados ficam no `localStorage` do navegador. Não há backend. Pelo link "seus dados · backup", no rodapé, dá pra exportar tudo num arquivo JSON, importar um backup ou começar do zero.
 
 ## Stack
 
@@ -24,6 +24,10 @@ Para rodar outros scripts sem subir o servidor:
 podman run --rm -v "$PWD":/app:z -w /app node:22-alpine sh -c "npm ci && npm run build"
 ```
 
+## Deploy
+
+O workflow `.github/workflows/deploy.yml` roda os testes, gera o build e publica no GitHub Pages a cada push na `main`. Para funcionar, em **Settings → Pages** do repositório a fonte precisa estar como **GitHub Actions**. O build usa caminhos relativos (`base: "./"`), então funciona no subcaminho `/book-tracker/` sem configuração extra.
+
 ## Scripts
 
 | Script                 | O que faz                                    |
@@ -43,16 +47,17 @@ podman run --rm -v "$PWD":/app:z -w /app node:22-alpine sh -c "npm ci && npm run
 ```
 src/
   App.tsx            monta a tela: cabeçalho, aba ativa e modal aberto
-  views/             abas: início, mapa e momentos
-  components/home/   seções da aba início (contadores, cards, momentos)
+  views/             abas (início, sessões, mapa e momentos) e a página da obra
+  components/home/   seções da aba início (contadores, cards, concluídas, momentos)
+  components/journal/ cards de sessão e momento, filtros e painel de hábitos
   components/map/    grafo SVG e card de detalhes da aba mapa
   components/layout/ cabeçalho e abas
-  components/modals/ formulários de obra, sessão, momento e conexão
-  components/ui/     Modal, CustomSelect, pickers, barra de rolagem e helpers
+  components/modals/ formulários de obra, sessão, momento, conexão e backup
+  components/ui/     Modal, CustomSelect, ConfirmButton, pickers, barra de rolagem e helpers
   hooks/             useLibrary (dados e operações), usePersistentState, useMediaQuery
   data/              dados de exemplo da primeira visita
-  storage/           validação dos dados salvos e versão/migrações do formato
-  utils/             regras de progresso, conexões, ids, datas e layout do mapa
+  storage/           validação dos dados salvos, versão/migrações do formato e backup
+  utils/             regras de progresso, conexões, filtros, hábitos, ids, datas e layout do mapa
   styles/            CSS por área, importado em ordem por index.css
   test/              setup compartilhado dos testes (Vitest + Testing Library)
   constants.ts       rótulos, humores, contextos e tags
