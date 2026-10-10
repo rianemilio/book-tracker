@@ -101,6 +101,11 @@
   box-shadow: 3px 3px 0px var(--ink);
 }
 
+/* Dentro de uma caixa, sem o espaço de cima */
+.p-danger-btn--flush {
+  margin-top: 0;
+}
+
 /* Link em texto ("ver todos") */
 .p-link-btn {
   flex-shrink: 0;

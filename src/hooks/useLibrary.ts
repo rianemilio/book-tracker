@@ -16,6 +16,7 @@ import {
   INIT_MOMENTS,
   INIT_SESSIONS,
 } from "../data/seed";
+import type { LibraryData } from "../storage/backup";
 import type { Connection, MediaItem, Moment, Session } from "../types";
 
 export type ItemInput = Omit<MediaItem, "id"> & { id?: number };
@@ -156,6 +157,14 @@ export function useLibrary() {
   const deleteSession = (id: number) =>
     setSessions((prev) => prev.filter((s) => s.id !== id));
 
+  // Substitui tudo (importar backup ou começar do zero)
+  const replaceAll = (data: LibraryData) => {
+    setItems(data.items);
+    setMoments(data.moments);
+    setSessions(data.sessions);
+    setConnections(data.connections);
+  };
+
   return {
     items,
     moments,
@@ -173,5 +182,6 @@ export function useLibrary() {
     addSession,
     updateSession,
     deleteSession,
+    replaceAll,
   };
 }

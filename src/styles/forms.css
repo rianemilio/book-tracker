@@ -77,6 +77,40 @@
   font-weight: bold;
 }
 
+/* Modal de dados (backup) */
+.p-data-note {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+}
+
+.p-data-label {
+  margin-top: 2rem;
+}
+
+.p-file-input {
+  width: 100%;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+}
+
+.p-file-input::file-selector-button {
+  background: transparent;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  padding: 6px 14px;
+  margin-right: 12px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px var(--ink);
+}
+
 /* Seletores de humor e chips; o selecionado vem de aria-pressed */
 .p-mood-grid,
 .p-chip-row {

@@ -9,6 +9,7 @@ import HomeView from "./views/HomeView";
 import MapView from "./views/MapView";
 import MomentsView from "./views/MomentsView";
 import SessionsView from "./views/SessionsView";
+import DataModal from "./components/modals/DataModal";
 import ItemModal from "./components/modals/ItemModal";
 import MomentModal from "./components/modals/MomentModal";
 import MoodModal from "./components/modals/MoodModal";
@@ -18,6 +19,7 @@ type OpenModal =
   | { kind: "session"; session: Session | null }
   | { kind: "moment"; moment: Moment | null }
   | { kind: "item"; item: MediaItem | null }
+  | { kind: "data" }
   | null;
 
 export default function App() {
@@ -64,6 +66,17 @@ export default function App() {
           }}
           onDelete={(id) => {
             library.deleteItem(id);
+            close();
+          }}
+          onClose={close}
+        />
+      )}
+
+      {modal?.kind === "data" && (
+        <DataModal
+          data={{ items, moments, sessions, connections }}
+          onReplace={(data) => {
+            library.replaceAll(data);
             close();
           }}
           onClose={close}
@@ -118,6 +131,15 @@ export default function App() {
           />
         )}
       </div>
+
+      <footer className="p-footer">
+        <button
+          className="p-link-btn"
+          onClick={() => setModal({ kind: "data" })}
+        >
+          seus dados · backup
+        </button>
+      </footer>
 
       <EdgeScrollbar />
     </>

@@ -131,4 +131,21 @@ describe("App", () => {
     expect(after).toHaveLength(before.length);
     expect(after[0]).toEqual({ ...before[0], text: "outro texto" });
   });
+
+  it("wipes everything when starting from scratch", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(
+      screen.getByRole("button", { name: "seus dados · backup" }),
+    );
+    await user.click(
+      screen.getByRole("button", { name: "Apagar tudo e começar do zero" }),
+    );
+    await user.click(
+      screen.getByRole("button", { name: "Clique de novo para apagar tudo" }),
+    );
+    for (const key of ["items", "moments", "sessions", "connections"]) {
+      expect(stored(key)).toEqual([]);
+    }
+  });
 });

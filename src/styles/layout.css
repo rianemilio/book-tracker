@@ -155,7 +155,30 @@
   flex-shrink: 0;
 }
 
+/* Rodapé com o acesso ao backup */
+.p-footer {
+  background: var(--ink);
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 4px solid var(--red);
+}
+
+.p-footer .p-link-btn {
+  color: rgba(244, 239, 230, 0.7);
+  margin: 0;
+}
+
+.p-footer .p-link-btn:hover {
+  color: var(--paper);
+}
+
 @media (max-width: 600px) {
+  .p-footer {
+    padding: 1rem;
+    justify-content: center;
+  }
+
   /* Logo em cima, ações dividindo a largura embaixo */
   .p-header {
     flex-direction: column;
