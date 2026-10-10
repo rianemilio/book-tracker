@@ -107,6 +107,14 @@ export function useLibrary() {
       ...prev,
     ]);
 
+  // Edição mantém id e data de criação
+  const updateMoment = (id: number, data: MomentInput) =>
+    setMoments((prev) =>
+      prev.map((m) =>
+        m.id === id ? { ...m, ...data, sym: data.sym || m.sym } : m,
+      ),
+    );
+
   const deleteMoment = (id: number) =>
     setMoments((prev) => prev.filter((m) => m.id !== id));
 
@@ -154,6 +162,7 @@ export function useLibrary() {
     addConnection,
     deleteConnection,
     addMoment,
+    updateMoment,
     deleteMoment,
     addSession,
     updateSession,

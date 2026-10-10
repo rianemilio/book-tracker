@@ -7,6 +7,7 @@ interface MomentsViewProps {
   items: MediaItem[];
   moments: Moment[];
   onAdd: () => void;
+  onEditMoment: (moment: Moment) => void;
   onDeleteMoment: (id: number) => void;
 }
 
@@ -14,6 +15,7 @@ export default function MomentsView({
   items,
   moments,
   onAdd,
+  onEditMoment,
   onDeleteMoment,
 }: MomentsViewProps) {
   return (
@@ -43,8 +45,14 @@ export default function MomentsView({
                   <Badge type={item.type} />
                   <span className="p-moment-title">{item.title}</span>
                   <span className="p-meta-txt">· {m.ref}</span>
-                  <ConfirmButton
+                  <button
                     className="p-ctrl-edit p-ctrl-edit--plain"
+                    onClick={() => onEditMoment(m)}
+                  >
+                    editar
+                  </button>
+                  <ConfirmButton
+                    className="p-ctrl-edit p-ctrl-edit--plain p-ctrl-edit--next"
                     onConfirm={() => onDeleteMoment(m.id)}
                   >
                     excluir

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { MediaItem } from "../../types";
+import type { MediaItem, Moment } from "../../types";
 import { MOODS, TAGS, CTXS } from "../../constants";
 import CustomSelect from "../ui/CustomSelect";
 import Modal from "../ui/Modal";
@@ -7,6 +7,8 @@ import { MoodPicker, ChipPicker } from "../ui/Pickers";
 
 interface MomentModalProps {
   items: MediaItem[];
+  // Momento existente = edição
+  moment?: Moment | null;
   onSave: (data: {
     itemId: number;
     text: string;
@@ -21,15 +23,25 @@ interface MomentModalProps {
 
 export default function MomentModal({
   items,
+  moment,
   onSave,
   onClose,
 }: MomentModalProps) {
-  const [itemId, setItemId] = useState<number>(items[0]?.id || 0);
-  const [text, setText] = useState("");
-  const [mood, setMood] = useState<string | null>(null);
-  const [tag, setTag] = useState<string | null>(null);
-  const [ctx, setCtx] = useState<string | null>(null);
-  const [ref, setRef] = useState("");
+  const [itemId, setItemId] = useState<number>(
+    moment?.itemId ?? (items[0]?.id || 0),
+  );
+  const [text, setText] = useState(moment?.text ?? "");
+  const [mood, setMood] = useState<string | null>(moment?.mood ?? null);
+  // Valores padrão gravados quando o campo fica vazio voltam a ser vazio
+  const [tag, setTag] = useState<string | null>(
+    moment && TAGS.includes(moment.tag) ? moment.tag : null,
+  );
+  const [ctx, setCtx] = useState<string | null>(
+    moment && CTXS.includes(moment.ctx) ? moment.ctx : null,
+  );
+  const [ref, setRef] = useState(
+    moment && moment.ref !== "—" ? moment.ref : "",
+  );
 
   const ok = text.trim() && mood && itemId;
 
@@ -40,7 +52,7 @@ export default function MomentModal({
 
   return (
     <Modal
-      eyebrow="guardar momento"
+      eyebrow={moment ? "editar momento" : "guardar momento"}
       title="o que ficou com você?"
       onClose={onClose}
     >
@@ -85,13 +97,13 @@ export default function MomentModal({
             text: text.trim(),
             mood,
             sym: MOODS.find((m) => m.k === mood)?.s,
-            tag: tag || "marcante",
-            ref: ref || "—",
-            ctx: ctx || "agora",
+            tag: tag || (moment?.tag ?? "marcante"),
+            ref: ref.trim() || "—",
+            ctx: ctx || (moment?.ctx ?? "agora"),
           })
         }
       >
-        guardar momento
+        {moment ? "salvar alterações" : "guardar momento"}
       </button>
     </Modal>
   );

@@ -101,4 +101,21 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: "confirmar?" }));
     expect(stored("sessions")).toEqual([]);
   });
+
+  it("edits a moment keeping its id and date", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "momentos" }));
+    const before = stored("moments");
+    await user.click(screen.getAllByRole("button", { name: "editar" })[0]);
+    const dialog = within(screen.getByRole("dialog"));
+    const text = dialog.getByPlaceholderText(/a cena/);
+    await user.clear(text);
+    await user.type(text, "outro texto");
+    await user.click(dialog.getByRole("button", { name: "salvar alterações" }));
+
+    const after = stored("moments");
+    expect(after).toHaveLength(before.length);
+    expect(after[0]).toEqual({ ...before[0], text: "outro texto" });
+  });
 });

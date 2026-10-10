@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./styles/index.css";
 import { useLibrary } from "./hooks/useLibrary";
-import type { MediaItem, Session } from "./types";
+import type { MediaItem, Moment, Session } from "./types";
 
 import AppHeader, { type Tab } from "./components/layout/AppHeader";
 import EdgeScrollbar from "./components/ui/EdgeScrollbar";
@@ -16,7 +16,7 @@ import MoodModal from "./components/modals/MoodModal";
 // No máximo um modal aberto por vez; registro null = criar um novo
 type OpenModal =
   | { kind: "session"; session: Session | null }
-  | { kind: "moment" }
+  | { kind: "moment"; moment: Moment | null }
   | { kind: "item"; item: MediaItem | null }
   | null;
 
@@ -45,8 +45,10 @@ export default function App() {
       {modal?.kind === "moment" && items.length > 0 && (
         <MomentModal
           items={items}
+          moment={modal.moment}
           onSave={(data) => {
-            library.addMoment(data);
+            if (modal.moment) library.updateMoment(modal.moment.id, data);
+            else library.addMoment(data);
             close();
           }}
           onClose={close}
@@ -109,7 +111,8 @@ export default function App() {
           <MomentsView
             items={items}
             moments={moments}
-            onAdd={() => setModal({ kind: "moment" })}
+            onAdd={() => setModal({ kind: "moment", moment: null })}
+            onEditMoment={(moment) => setModal({ kind: "moment", moment })}
             onDeleteMoment={library.deleteMoment}
           />
         )}
