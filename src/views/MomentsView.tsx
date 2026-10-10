@@ -1,4 +1,5 @@
 import type { MediaItem, Moment } from "../types";
+import ConfirmButton from "../components/ui/ConfirmButton";
 import { Badge, Pill } from "../components/ui/UIHelpers";
 import { formatDate } from "../utils/date";
 
@@ -42,12 +43,12 @@ export default function MomentsView({
                   <Badge type={item.type} />
                   <span className="p-moment-title">{item.title}</span>
                   <span className="p-meta-txt">· {m.ref}</span>
-                  <button
+                  <ConfirmButton
                     className="p-ctrl-edit p-ctrl-edit--plain"
-                    onClick={() => onDeleteMoment(m.id)}
+                    onConfirm={() => onDeleteMoment(m.id)}
                   >
                     excluir
-                  </button>
+                  </ConfirmButton>
                 </div>
                 <div className="p-quote-text">"{m.text}"</div>
                 <div className="p-moment-meta">

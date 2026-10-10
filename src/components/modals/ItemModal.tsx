@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { MediaItem, MediaType, ItemStatus } from "../../types";
+import ConfirmButton from "../ui/ConfirmButton";
 import CustomSelect from "../ui/CustomSelect";
 import Modal from "../ui/Modal";
 
@@ -129,9 +130,13 @@ export default function ItemModal({
       </button>
 
       {item && (
-        <button className="p-danger-btn" onClick={() => onDelete(item.id)}>
+        <ConfirmButton
+          className="p-danger-btn"
+          confirmLabel="Clique de novo para excluir a obra e seus registros"
+          onConfirm={() => onDelete(item.id)}
+        >
           Excluir Obra Permanentemente
-        </button>
+        </ConfirmButton>
       )}
     </Modal>
   );

@@ -1,4 +1,5 @@
 import type { Connection, MediaItem, Moment } from "../../types";
+import ConfirmButton from "../ui/ConfirmButton";
 import { Badge } from "../ui/UIHelpers";
 
 interface ItemDetailsProps {
@@ -41,13 +42,13 @@ export default function ItemDetails({
               data-type={other.type}
             >
               {other.title} - {connection.reason}
-              <button
+              <ConfirmButton
                 className="p-del-conn"
                 title="Excluir conexão"
-                onClick={() => onDeleteConnection(connection.id)}
+                onConfirm={() => onDeleteConnection(connection.id)}
               >
                 ×
-              </button>
+              </ConfirmButton>
             </span>
           ))}
           {links.length === 0 && (

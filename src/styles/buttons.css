@@ -153,6 +153,16 @@
   text-decoration: none;
 }
 
+/* Botão de exclusão esperando o segundo clique */
+.p-ctrl-edit[data-armed] {
+  color: var(--red);
+}
+
+.p-danger-btn[data-armed] {
+  background: var(--ink);
+  box-shadow: 3px 3px 0px var(--red);
+}
+
 /* Área tracejada de "adicionar"; --static é só o estado vazio, sem ação */
 .p-drip-add {
   display: block;

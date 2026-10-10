@@ -39,6 +39,11 @@ describe("App", () => {
     await user.click(
       screen.getByRole("button", { name: "Excluir Obra Permanentemente" }),
     );
+    // O primeiro clique só pede confirmação
+    expect(stored("items").some((i: { id: number }) => i.id === 1)).toBe(true);
+    await user.click(
+      screen.getByRole("button", { name: /Clique de novo para excluir/ }),
+    );
 
     const id = 1;
     expect(stored("items").some((i: { id: number }) => i.id === id)).toBe(
