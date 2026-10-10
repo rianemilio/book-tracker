@@ -12,6 +12,7 @@ interface SessionsViewProps {
   onAdd: () => void;
   onEditSession: (session: Session) => void;
   onDeleteSession: (id: number) => void;
+  onOpenItem: (id: number) => void;
 }
 
 export default function SessionsView({
@@ -20,6 +21,7 @@ export default function SessionsView({
   onAdd,
   onEditSession,
   onDeleteSession,
+  onOpenItem,
 }: SessionsViewProps) {
   const [filter, setFilter] = useState(NO_FILTER);
   // Sessões novas entram no fim da lista; aqui a mais recente vem primeiro
@@ -66,6 +68,7 @@ export default function SessionsView({
                 item={item}
                 onEdit={onEditSession}
                 onDelete={onDeleteSession}
+                onOpenItem={onOpenItem}
               />
             );
           })}

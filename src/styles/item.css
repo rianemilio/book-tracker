@@ -1,0 +1,79 @@
+/* Página da obra */
+.p-back-btn {
+  margin: 0 0 1.5rem;
+}
+
+.p-item-page-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  margin-bottom: 2.5rem;
+  align-items: start;
+}
+
+.p-item-summary {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1.2rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  transform: skewX(-3deg);
+  box-shadow: 6px 6px 0px var(--red);
+  outline: 1px solid transparent;
+}
+
+.p-item-summary .p-stat-label {
+  color: rgba(244, 239, 230, 0.7);
+  margin: 0;
+}
+
+.p-item-summary-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.p-item-summary-num {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 36px;
+  line-height: 1;
+}
+
+.p-item-summary-line {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  border-top: 1px dashed rgba(244, 239, 230, 0.3);
+  padding-top: 8px;
+}
+
+.p-item-page-list {
+  margin-bottom: 2rem;
+}
+
+/* Conexão clicável: leva à página da outra obra */
+.p-conn-tag--link {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.p-conn-tag--link:hover {
+  background: var(--ink);
+}
+
+@media (max-width: 600px) {
+  .p-item-page-top {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    margin-bottom: 1.75rem;
+  }
+
+  .p-item-summary {
+    padding: 1rem 1.1rem;
+  }
+
+  .p-item-summary-num {
+    font-size: 28px;
+  }
+}

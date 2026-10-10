@@ -10,6 +10,7 @@ interface MomentsViewProps {
   onAdd: () => void;
   onEditMoment: (moment: Moment) => void;
   onDeleteMoment: (id: number) => void;
+  onOpenItem: (id: number) => void;
 }
 
 export default function MomentsView({
@@ -18,6 +19,7 @@ export default function MomentsView({
   onAdd,
   onEditMoment,
   onDeleteMoment,
+  onOpenItem,
 }: MomentsViewProps) {
   const [filter, setFilter] = useState(NO_FILTER);
   const shown = moments.filter((m) => matchesFilter(m, filter));
@@ -63,6 +65,7 @@ export default function MomentsView({
                 item={item}
                 onEdit={onEditMoment}
                 onDelete={onDeleteMoment}
+                onOpenItem={onOpenItem}
               />
             );
           })}

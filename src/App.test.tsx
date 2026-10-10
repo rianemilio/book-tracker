@@ -9,7 +9,7 @@ const stored = (key: string) =>
 function cardFor(title: string) {
   const card = screen
     .getAllByText(title)
-    .find((el) => el.classList.contains("p-item-title"))
+    .find((el) => el.closest(".p-item-title"))
     ?.closest(".p-item-card");
   if (!(card instanceof HTMLElement)) throw new Error(`card ${title} missing`);
   return within(card);
@@ -147,6 +147,35 @@ describe("App", () => {
     for (const key of ["items", "moments", "sessions", "connections"]) {
       expect(stored(key)).toEqual([]);
     }
+  });
+
+  it("opens the work page with its sessions, moments and connections", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(
+      cardFor("Berserk").getByRole("button", { name: "Berserk" }),
+    );
+
+    expect(
+      screen.getByRole("button", { name: "← voltar" }),
+    ).toBeInTheDocument();
+    // A sessão de exemplo é do Berserk
+    expect(screen.getByText(/Lendo capítulos pesados/)).toBeInTheDocument();
+    const berserkMoments = stored("moments").filter(
+      (m: { itemId: number }) => m.itemId === 1,
+    );
+    expect(document.querySelectorAll(".p-quote-text")).toHaveLength(
+      berserkMoments.length + 1,
+    );
+
+    // Registrar sessão pela página já vem com a obra escolhida
+    await user.click(screen.getByRole("button", { name: "+ registrar" }));
+    const dialog = within(screen.getByRole("dialog"));
+    expect(dialog.getByRole("combobox")).toHaveTextContent("Berserk");
+    await user.click(dialog.getByRole("button", { name: "Fechar" }));
+
+    await user.click(screen.getByRole("button", { name: "← voltar" }));
+    expect(screen.getByText("em andamento")).toBeInTheDocument();
   });
 
   it("filters moments by work", async () => {

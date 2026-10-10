@@ -1,13 +1,15 @@
 import type { MediaItem, Moment } from "../../types";
 import { formatDate } from "../../utils/date";
 import ConfirmButton from "../ui/ConfirmButton";
-import { Badge, Pill } from "../ui/UIHelpers";
+import { Badge, Pill, TitleLink } from "../ui/UIHelpers";
 
 interface MomentCardProps {
   moment: Moment;
   item: MediaItem;
   onEdit: (moment: Moment) => void;
   onDelete: (id: number) => void;
+  // Sem onOpenItem (já na página da obra) o título é só texto
+  onOpenItem?: (id: number) => void;
 }
 
 export default function MomentCard({
@@ -15,13 +17,18 @@ export default function MomentCard({
   item,
   onEdit,
   onDelete,
+  onOpenItem,
 }: MomentCardProps) {
   return (
     <div className="p-moment-card" data-type={item.type}>
       <div className="p-moment-inner">
         <div className="p-moment-head">
           <Badge type={item.type} />
-          <span className="p-moment-title">{item.title}</span>
+          <TitleLink
+            className="p-moment-title"
+            item={item}
+            onOpen={onOpenItem}
+          />
           <span className="p-meta-txt">· {m.ref}</span>
           <button
             className="p-ctrl-edit p-ctrl-edit--plain"

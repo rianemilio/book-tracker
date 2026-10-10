@@ -7,6 +7,8 @@ import { MoodPicker, ChipPicker } from "../ui/Pickers";
 
 interface MomentModalProps {
   items: MediaItem[];
+  // Obra já escolhida ao abrir (ex.: pela página da obra)
+  initialItemId?: number;
   // Momento existente = edição
   moment?: Moment | null;
   onSave: (data: {
@@ -23,12 +25,13 @@ interface MomentModalProps {
 
 export default function MomentModal({
   items,
+  initialItemId,
   moment,
   onSave,
   onClose,
 }: MomentModalProps) {
   const [itemId, setItemId] = useState<number>(
-    moment?.itemId ?? (items[0]?.id || 0),
+    moment?.itemId ?? initialItemId ?? (items[0]?.id || 0),
   );
   const [text, setText] = useState(moment?.text ?? "");
   const [mood, setMood] = useState<string | null>(moment?.mood ?? null);

@@ -7,6 +7,8 @@ import { MoodPicker, ChipPicker } from "../ui/Pickers";
 
 interface MoodModalProps {
   items: MediaItem[];
+  // Obra já escolhida ao abrir (ex.: pela página da obra)
+  initialItemId?: number;
   // Sessão existente = edição (sem atualizar progresso)
   session?: Session | null;
   onSave: (data: {
@@ -22,12 +24,13 @@ interface MoodModalProps {
 
 export default function MoodModal({
   items,
+  initialItemId,
   session,
   onSave,
   onClose,
 }: MoodModalProps) {
   const [itemId, setItemId] = useState<number>(
-    session?.itemId ?? (items[0]?.id || 0),
+    session?.itemId ?? initialItemId ?? (items[0]?.id || 0),
   );
   const [mood, setMood] = useState<string | null>(session?.mood ?? null);
   const [ctx, setCtx] = useState<string | null>(session?.ctx ?? null);

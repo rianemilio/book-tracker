@@ -14,6 +14,7 @@ interface MapViewProps {
   onAddConnection: (data: ConnectionInput) => void;
   onUpdateConnectionReason: (id: string, reason: string) => void;
   onDeleteConnection: (id: string) => void;
+  onOpenItem: (id: number) => void;
 }
 
 export default function MapView({
@@ -23,6 +24,7 @@ export default function MapView({
   onAddConnection,
   onUpdateConnectionReason,
   onDeleteConnection,
+  onOpenItem,
 }: MapViewProps) {
   const [selId, setSelId] = useState<number | undefined>(items[0]?.id);
   const selected = items.find((i) => i.id === selId) ?? items[0];
@@ -85,6 +87,7 @@ export default function MapView({
               items={items}
               connections={connections}
               moments={moments}
+              onOpenItem={onOpenItem}
               onEditConnection={(connection) => setConnModal({ connection })}
               onDeleteConnection={onDeleteConnection}
             />

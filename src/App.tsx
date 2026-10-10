@@ -6,6 +6,7 @@ import type { MediaItem, Moment, Session } from "./types";
 import AppHeader, { type Tab } from "./components/layout/AppHeader";
 import EdgeScrollbar from "./components/ui/EdgeScrollbar";
 import HomeView from "./views/HomeView";
+import ItemView from "./views/ItemView";
 import MapView from "./views/MapView";
 import MomentsView from "./views/MomentsView";
 import SessionsView from "./views/SessionsView";
@@ -14,10 +15,11 @@ import ItemModal from "./components/modals/ItemModal";
 import MomentModal from "./components/modals/MomentModal";
 import MoodModal from "./components/modals/MoodModal";
 
-// No máximo um modal aberto por vez; registro null = criar um novo
+// No máximo um modal aberto por vez; registro null = criar um novo,
+// itemId = obra já escolhida no formulário
 type OpenModal =
-  | { kind: "session"; session: Session | null }
-  | { kind: "moment"; moment: Moment | null }
+  | { kind: "session"; session: Session | null; itemId?: number }
+  | { kind: "moment"; moment: Moment | null; itemId?: number }
   | { kind: "item"; item: MediaItem | null }
   | { kind: "data" }
   | null;
@@ -27,7 +29,28 @@ export default function App() {
   const { items, moments, sessions, connections } = library;
   const [tab, setTab] = useState<Tab>("home");
   const [modal, setModal] = useState<OpenModal>(null);
+  // Página da obra aberta por cima da aba atual; "voltar" retorna à aba
+  const [openItemId, setOpenItemId] = useState<number | null>(null);
+  const openItem = items.find((i) => i.id === openItemId);
   const close = () => setModal(null);
+
+  const showItem = (id: number | null) => {
+    setOpenItemId(id);
+    if (document.scrollingElement) document.scrollingElement.scrollTop = 0;
+  };
+  const changeTab = (next: Tab) => {
+    setTab(next);
+    setOpenItemId(null);
+  };
+
+  const editItem = (item: MediaItem) => setModal({ kind: "item", item });
+  const newSession = (itemId?: number) =>
+    setModal({ kind: "session", session: null, itemId });
+  const editSession = (session: Session) =>
+    setModal({ kind: "session", session });
+  const newMoment = (itemId?: number) =>
+    setModal({ kind: "moment", moment: null, itemId });
+  const editMoment = (moment: Moment) => setModal({ kind: "moment", moment });
 
   return (
     <>
@@ -35,6 +58,7 @@ export default function App() {
         <MoodModal
           items={items}
           session={modal.session}
+          initialItemId={modal.itemId}
           onSave={(data) => {
             if (modal.session) library.updateSession(modal.session.id, data);
             else library.addSession(data);
@@ -48,6 +72,7 @@ export default function App() {
         <MomentModal
           items={items}
           moment={modal.moment}
+          initialItemId={modal.itemId}
           onSave={(data) => {
             if (modal.moment) library.updateMoment(modal.moment.id, data);
             else library.addMoment(data);
@@ -86,49 +111,76 @@ export default function App() {
       <AppHeader
         tab={tab}
         canRegisterSession={items.length > 0}
-        onTabChange={setTab}
+        onTabChange={changeTab}
         onNewItem={() => setModal({ kind: "item", item: null })}
-        onNewSession={() => setModal({ kind: "session", session: null })}
+        onNewSession={() => newSession(openItem?.id)}
       />
 
       <div className="p-body">
-        {tab === "home" && (
-          <HomeView
-            items={items}
-            moments={moments}
-            sessions={sessions}
-            onTabMoments={() => setTab("moments")}
-            onEditItem={(item) => setModal({ kind: "item", item })}
-            onQuickProgress={library.quickProgress}
-          />
-        )}
-        {tab === "sessions" && (
-          <SessionsView
+        {openItem ? (
+          <ItemView
+            key={openItem.id}
+            item={openItem}
             items={items}
             sessions={sessions}
-            onAdd={() => setModal({ kind: "session", session: null })}
-            onEditSession={(session) => setModal({ kind: "session", session })}
-            onDeleteSession={library.deleteSession}
-          />
-        )}
-        {tab === "map" && (
-          <MapView
-            items={items}
             moments={moments}
             connections={connections}
-            onAddConnection={library.addConnection}
-            onUpdateConnectionReason={library.updateConnectionReason}
-            onDeleteConnection={library.deleteConnection}
-          />
-        )}
-        {tab === "moments" && (
-          <MomentsView
-            items={items}
-            moments={moments}
-            onAdd={() => setModal({ kind: "moment", moment: null })}
-            onEditMoment={(moment) => setModal({ kind: "moment", moment })}
+            onBack={() => showItem(null)}
+            onOpenItem={showItem}
+            onEditItem={editItem}
+            onQuickProgress={library.quickProgress}
+            onNewSession={newSession}
+            onEditSession={editSession}
+            onDeleteSession={library.deleteSession}
+            onNewMoment={newMoment}
+            onEditMoment={editMoment}
             onDeleteMoment={library.deleteMoment}
           />
+        ) : (
+          <>
+            {tab === "home" && (
+              <HomeView
+                items={items}
+                moments={moments}
+                sessions={sessions}
+                onTabMoments={() => changeTab("moments")}
+                onEditItem={editItem}
+                onOpenItem={showItem}
+                onQuickProgress={library.quickProgress}
+              />
+            )}
+            {tab === "sessions" && (
+              <SessionsView
+                items={items}
+                sessions={sessions}
+                onAdd={() => newSession()}
+                onEditSession={editSession}
+                onDeleteSession={library.deleteSession}
+                onOpenItem={showItem}
+              />
+            )}
+            {tab === "map" && (
+              <MapView
+                items={items}
+                moments={moments}
+                connections={connections}
+                onAddConnection={library.addConnection}
+                onUpdateConnectionReason={library.updateConnectionReason}
+                onDeleteConnection={library.deleteConnection}
+                onOpenItem={showItem}
+              />
+            )}
+            {tab === "moments" && (
+              <MomentsView
+                items={items}
+                moments={moments}
+                onAdd={() => newMoment()}
+                onEditMoment={editMoment}
+                onDeleteMoment={library.deleteMoment}
+                onOpenItem={showItem}
+              />
+            )}
+          </>
         )}
       </div>
 

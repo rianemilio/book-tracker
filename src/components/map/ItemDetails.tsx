@@ -1,12 +1,13 @@
 import type { Connection, MediaItem, Moment } from "../../types";
 import ConfirmButton from "../ui/ConfirmButton";
-import { Badge } from "../ui/UIHelpers";
+import { Badge, TitleLink } from "../ui/UIHelpers";
 
 interface ItemDetailsProps {
   item: MediaItem;
   items: MediaItem[];
   connections: Connection[];
   moments: Moment[];
+  onOpenItem: (id: number) => void;
   onEditConnection: (connection: Connection) => void;
   onDeleteConnection: (id: string) => void;
 }
@@ -17,6 +18,7 @@ export default function ItemDetails({
   items,
   connections,
   moments,
+  onOpenItem,
   onEditConnection,
   onDeleteConnection,
 }: ItemDetailsProps) {
@@ -32,7 +34,9 @@ export default function ItemDetails({
     <div className="p-conn-card" data-type={item.type}>
       <div className="p-conn-body">
         <Badge type={item.type} />
-        <div className="p-conn-title">{item.title}</div>
+        <div className="p-conn-title">
+          <TitleLink item={item} onOpen={onOpenItem} />
+        </div>
         <div className="p-conn-author">{item.creator}</div>
 
         <div className="p-field-label p-conn-label">Conexões Ativas</div>

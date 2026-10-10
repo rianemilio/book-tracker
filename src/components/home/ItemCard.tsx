@@ -1,6 +1,6 @@
 import type { MediaItem } from "../../types";
 import { progressPercent } from "../../utils/progress";
-import { Badge } from "../ui/UIHelpers";
+import { Badge, TitleLink } from "../ui/UIHelpers";
 
 // Atalhos de progresso: [variação, rótulo]
 const STEPS: [number, string][] = [
@@ -14,19 +14,23 @@ interface ItemCardProps {
   item: MediaItem;
   onQuickProgress: (id: number, delta: number) => void;
   onEdit: (item: MediaItem) => void;
+  onOpen?: (id: number) => void;
 }
 
 export default function ItemCard({
   item,
   onQuickProgress,
   onEdit,
+  onOpen,
 }: ItemCardProps) {
   const pct = progressPercent(item);
 
   return (
     <div className="p-item-card" data-type={item.type}>
       <Badge type={item.type} />
-      <div className="p-item-title">{item.title}</div>
+      <div className="p-item-title">
+        <TitleLink item={item} onOpen={onOpen} />
+      </div>
       <div className="p-item-author">{item.creator}</div>
       <div className="p-prog-pct">
         <span>

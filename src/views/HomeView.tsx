@@ -22,6 +22,7 @@ interface HomeViewProps {
   sessions: Session[];
   onTabMoments: () => void;
   onEditItem: (item: MediaItem) => void;
+  onOpenItem: (id: number) => void;
   onQuickProgress: (id: number, delta: number) => void;
 }
 
@@ -31,6 +32,7 @@ export default function HomeView({
   sessions,
   onTabMoments,
   onEditItem,
+  onOpenItem,
   onQuickProgress,
 }: HomeViewProps) {
   const [filter, setFilter] = useState<Filter>("all");
@@ -76,6 +78,7 @@ export default function HomeView({
               item={item}
               onQuickProgress={onQuickProgress}
               onEdit={onEditItem}
+              onOpen={onOpenItem}
             />
           ))}
         </div>
@@ -84,7 +87,7 @@ export default function HomeView({
       {items.some((i) => i.status === "done") && (
         <>
           <SectionHead>concluídas</SectionHead>
-          <DoneList items={done} onEdit={onEditItem} />
+          <DoneList items={done} onEdit={onEditItem} onOpen={onOpenItem} />
         </>
       )}
 

@@ -1,13 +1,15 @@
 import type { MediaItem, Session } from "../../types";
 import { formatDate } from "../../utils/date";
 import ConfirmButton from "../ui/ConfirmButton";
-import { Badge } from "../ui/UIHelpers";
+import { Badge, TitleLink } from "../ui/UIHelpers";
 
 interface SessionCardProps {
   session: Session;
   item: MediaItem;
   onEdit: (session: Session) => void;
   onDelete: (id: number) => void;
+  // Sem onOpenItem (já na página da obra) o título é só texto
+  onOpenItem?: (id: number) => void;
 }
 
 export default function SessionCard({
@@ -15,13 +17,18 @@ export default function SessionCard({
   item,
   onEdit,
   onDelete,
+  onOpenItem,
 }: SessionCardProps) {
   return (
     <div className="p-moment-card" data-type={item.type}>
       <div className="p-moment-inner">
         <div className="p-moment-head">
           <Badge type={item.type} />
-          <span className="p-moment-title">{item.title}</span>
+          <TitleLink
+            className="p-moment-title"
+            item={item}
+            onOpen={onOpenItem}
+          />
           <button
             className="p-ctrl-edit p-ctrl-edit--plain"
             onClick={() => onEdit(s)}
