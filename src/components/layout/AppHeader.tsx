@@ -1,7 +1,8 @@
-export type Tab = "home" | "map" | "moments";
+export type Tab = "home" | "sessions" | "map" | "moments";
 
 const TABS: [Tab, string][] = [
   ["home", "início"],
+  ["sessions", "sessões"],
   ["map", "mapa"],
   ["moments", "momentos"],
 ];

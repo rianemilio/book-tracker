@@ -123,6 +123,26 @@ export function useLibrary() {
     if (newProgress !== undefined) setProgress(data.itemId, newProgress);
   };
 
+  // Editar uma sessão não mexe no progresso da obra
+  const updateSession = (id: number, data: SessionInput) =>
+    setSessions((prev) =>
+      prev.map((s) =>
+        s.id === id
+          ? {
+              ...s,
+              itemId: data.itemId,
+              mood: data.mood,
+              ctx: data.ctx,
+              note: data.note,
+              sym: data.sym || s.sym,
+            }
+          : s,
+      ),
+    );
+
+  const deleteSession = (id: number) =>
+    setSessions((prev) => prev.filter((s) => s.id !== id));
+
   return {
     items,
     moments,
@@ -136,5 +156,7 @@ export function useLibrary() {
     addMoment,
     deleteMoment,
     addSession,
+    updateSession,
+    deleteSession,
   };
 }

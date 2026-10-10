@@ -81,4 +81,24 @@ describe("App", () => {
     // Progresso não mudou, então o item não deve ser regravado
     expect(stored("items")[0]).toMatchObject({ progress: 305 });
   });
+
+  it("edits and deletes a session from the history tab", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "sessões" }));
+    await user.click(screen.getByRole("button", { name: "editar" }));
+
+    const dialog = within(screen.getByRole("dialog"));
+    // Editar não oferece atualização de progresso
+    expect(dialog.queryByText(/Atualizar Progresso/)).not.toBeInTheDocument();
+    await user.click(dialog.getByRole("button", { name: /inspirado/ }));
+    await user.click(dialog.getByRole("button", { name: "salvar alterações" }));
+    expect(stored("sessions")).toEqual([
+      expect.objectContaining({ id: 201, mood: "inspirado", sym: "★" }),
+    ]);
+
+    await user.click(screen.getByRole("button", { name: "excluir" }));
+    await user.click(screen.getByRole("button", { name: "confirmar?" }));
+    expect(stored("sessions")).toEqual([]);
+  });
 });

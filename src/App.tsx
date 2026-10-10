@@ -1,20 +1,21 @@
 import { useState } from "react";
 import "./styles/index.css";
 import { useLibrary } from "./hooks/useLibrary";
-import type { MediaItem } from "./types";
+import type { MediaItem, Session } from "./types";
 
 import AppHeader, { type Tab } from "./components/layout/AppHeader";
 import EdgeScrollbar from "./components/ui/EdgeScrollbar";
 import HomeView from "./views/HomeView";
 import MapView from "./views/MapView";
 import MomentsView from "./views/MomentsView";
+import SessionsView from "./views/SessionsView";
 import ItemModal from "./components/modals/ItemModal";
 import MomentModal from "./components/modals/MomentModal";
 import MoodModal from "./components/modals/MoodModal";
 
-// No máximo um modal aberto por vez; item null = obra nova
+// No máximo um modal aberto por vez; registro null = criar um novo
 type OpenModal =
-  | { kind: "session" }
+  | { kind: "session"; session: Session | null }
   | { kind: "moment" }
   | { kind: "item"; item: MediaItem | null }
   | null;
@@ -31,8 +32,10 @@ export default function App() {
       {modal?.kind === "session" && items.length > 0 && (
         <MoodModal
           items={items}
+          session={modal.session}
           onSave={(data) => {
-            library.addSession(data);
+            if (modal.session) library.updateSession(modal.session.id, data);
+            else library.addSession(data);
             close();
           }}
           onClose={close}
@@ -70,7 +73,7 @@ export default function App() {
         canRegisterSession={items.length > 0}
         onTabChange={setTab}
         onNewItem={() => setModal({ kind: "item", item: null })}
-        onNewSession={() => setModal({ kind: "session" })}
+        onNewSession={() => setModal({ kind: "session", session: null })}
       />
 
       <div className="p-body">
@@ -82,6 +85,15 @@ export default function App() {
             onTabMoments={() => setTab("moments")}
             onEditItem={(item) => setModal({ kind: "item", item })}
             onQuickProgress={library.quickProgress}
+          />
+        )}
+        {tab === "sessions" && (
+          <SessionsView
+            items={items}
+            sessions={sessions}
+            onAdd={() => setModal({ kind: "session", session: null })}
+            onEditSession={(session) => setModal({ kind: "session", session })}
+            onDeleteSession={library.deleteSession}
           />
         )}
         {tab === "map" && (

@@ -153,6 +153,11 @@
   text-decoration: none;
 }
 
+/* Segundo controle da linha: fica colado no primeiro, que já vai à direita */
+.p-ctrl-edit--next {
+  margin-left: 0;
+}
+
 /* Botão de exclusão esperando o segundo clique */
 .p-ctrl-edit[data-armed] {
   color: var(--red);

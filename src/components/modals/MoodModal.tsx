@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { MediaItem } from "../../types";
+import type { MediaItem, Session } from "../../types";
 import { MOODS, CTXS } from "../../constants";
 import CustomSelect from "../ui/CustomSelect";
 import Modal from "../ui/Modal";
@@ -7,6 +7,8 @@ import { MoodPicker, ChipPicker } from "../ui/Pickers";
 
 interface MoodModalProps {
   items: MediaItem[];
+  // Sessão existente = edição (sem atualizar progresso)
+  session?: Session | null;
   onSave: (data: {
     itemId: number;
     mood: string;
@@ -18,11 +20,18 @@ interface MoodModalProps {
   onClose: () => void;
 }
 
-export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
-  const [itemId, setItemId] = useState<number>(items[0]?.id || 0);
-  const [mood, setMood] = useState<string | null>(null);
-  const [ctx, setCtx] = useState<string | null>(null);
-  const [note, setNote] = useState("");
+export default function MoodModal({
+  items,
+  session,
+  onSave,
+  onClose,
+}: MoodModalProps) {
+  const [itemId, setItemId] = useState<number>(
+    session?.itemId ?? (items[0]?.id || 0),
+  );
+  const [mood, setMood] = useState<string | null>(session?.mood ?? null);
+  const [ctx, setCtx] = useState<string | null>(session?.ctx ?? null);
+  const [note, setNote] = useState(session?.note ?? "");
 
   const selectedItem = items.find((i) => i.id === itemId);
   const [newProg, setNewProg] = useState(selectedItem?.progress || 0);
@@ -41,8 +50,8 @@ export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
 
   return (
     <Modal
-      eyebrow="registrar sessão"
-      title="como você está agora?"
+      eyebrow={session ? "editar sessão" : "registrar sessão"}
+      title={session ? "como você estava?" : "como você está agora?"}
       onClose={onClose}
     >
       <label className="p-field-label">O que você está consumindo</label>
@@ -52,7 +61,7 @@ export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
         onChange={(val) => handleItemChange(Number(val))}
       />
 
-      {selectedItem && (
+      {selectedItem && !session && (
         <div className="p-progress-box">
           <label className="p-field-label">
             Atualizar Progresso nesta sessão?
@@ -107,11 +116,13 @@ export default function MoodModal({ items, onSave, onClose }: MoodModalProps) {
             note,
             sym: MOODS.find((m) => m.k === mood)?.s,
             newProgress:
-              newProg !== selectedItem?.progress ? newProg : undefined,
+              !session && newProg !== selectedItem?.progress
+                ? newProg
+                : undefined,
           })
         }
       >
-        salvar sessão
+        {session ? "salvar alterações" : "salvar sessão"}
       </button>
     </Modal>
   );
