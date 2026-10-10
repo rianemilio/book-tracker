@@ -1,8 +1,10 @@
 import { useState } from "react";
 import type { MediaItem, Session } from "../types";
 import { NO_FILTER, matchesFilter } from "../utils/filters";
+import HabitsPanel from "../components/journal/HabitsPanel";
 import JournalFilters from "../components/journal/JournalFilters";
 import SessionCard from "../components/journal/SessionCard";
+import { SectionHead } from "../components/ui/UIHelpers";
 
 interface SessionsViewProps {
   items: MediaItem[];
@@ -27,7 +29,7 @@ export default function SessionsView({
     <div>
       <div className="p-view-head">
         <div className="p-section-head">
-          <span className="p-section-label">histórico de sessões</span>
+          <span className="p-section-label">seus hábitos</span>
           <div className="p-section-line" />
         </div>
         {items.length > 0 && (
@@ -44,6 +46,9 @@ export default function SessionsView({
         </div>
       ) : (
         <>
+          <HabitsPanel sessions={sessions} items={items} />
+
+          <SectionHead>histórico de sessões</SectionHead>
           <JournalFilters items={items} value={filter} onChange={setFilter} />
 
           {shown.length === 0 && (

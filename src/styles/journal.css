@@ -1,3 +1,39 @@
+/* Painel "seus hábitos" da aba sessões */
+.p-habits {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 2.5rem;
+}
+
+.p-habit {
+  background: var(--paper-2);
+  border: 3px solid var(--ink);
+  padding: 1rem 1.1rem;
+  box-shadow: 5px 5px 0px var(--red);
+  transform: skewX(-2deg);
+  outline: 1px solid transparent;
+  min-width: 0;
+}
+
+.p-habit-value {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.p-habit-count {
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
 /* Filtros de sessões e momentos */
 .p-journal-filters {
   display: grid;
@@ -17,7 +53,26 @@
   margin: -0.75rem 0 1.25rem;
 }
 
+@media (max-width: 900px) {
+  .p-habits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 600px) {
+  .p-habits {
+    gap: 12px;
+    margin-bottom: 1.75rem;
+  }
+
+  .p-habit {
+    padding: 0.8rem;
+  }
+
+  .p-habit-value {
+    font-size: 15px;
+  }
+
   .p-journal-filters,
   .p-journal-filters[data-cols="3"] {
     grid-template-columns: minmax(0, 1fr);
