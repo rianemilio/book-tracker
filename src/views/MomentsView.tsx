@@ -1,7 +1,8 @@
+import { useState } from "react";
 import type { MediaItem, Moment } from "../types";
-import ConfirmButton from "../components/ui/ConfirmButton";
-import { Badge, Pill } from "../components/ui/UIHelpers";
-import { formatDate } from "../utils/date";
+import { NO_FILTER, matchesFilter } from "../utils/filters";
+import JournalFilters from "../components/journal/JournalFilters";
+import MomentCard from "../components/journal/MomentCard";
 
 interface MomentsViewProps {
   items: MediaItem[];
@@ -18,6 +19,11 @@ export default function MomentsView({
   onEditMoment,
   onDeleteMoment,
 }: MomentsViewProps) {
+  const [filter, setFilter] = useState(NO_FILTER);
+  const shown = moments.filter((m) => matchesFilter(m, filter));
+  // Só as tags que já foram usadas, na ordem em que aparecem
+  const tags = [...new Set(moments.map((m) => m.tag))];
+
   return (
     <div>
       <div className="p-view-head">
@@ -35,47 +41,35 @@ export default function MomentsView({
           + Você ainda não guardou momentos. Clique para catalogar o primeiro.
         </button>
       ) : (
-        moments.map((m) => {
-          const item = items.find((i) => i.id === m.itemId);
-          if (!item) return null;
-          return (
-            <div key={m.id} className="p-moment-card" data-type={item.type}>
-              <div className="p-moment-inner">
-                <div className="p-moment-head">
-                  <Badge type={item.type} />
-                  <span className="p-moment-title">{item.title}</span>
-                  <span className="p-meta-txt">· {m.ref}</span>
-                  <button
-                    className="p-ctrl-edit p-ctrl-edit--plain"
-                    onClick={() => onEditMoment(m)}
-                  >
-                    editar
-                  </button>
-                  <ConfirmButton
-                    className="p-ctrl-edit p-ctrl-edit--plain p-ctrl-edit--next"
-                    onConfirm={() => onDeleteMoment(m.id)}
-                  >
-                    excluir
-                  </ConfirmButton>
-                </div>
-                <div className="p-quote-text">"{m.text}"</div>
-                <div className="p-moment-meta">
-                  <span className="p-meta-sym">{m.sym}</span>
-                  <span className="p-meta-txt">
-                    {m.mood} · {m.ctx}
-                    {m.createdAt && <> · {formatDate(m.createdAt)}</>}
-                  </span>
-                  <Pill type={item.type}>{m.tag}</Pill>
-                </div>
-              </div>
+        <>
+          <JournalFilters
+            items={items}
+            value={filter}
+            onChange={setFilter}
+            tags={tags}
+          />
+          {shown.length === 0 && (
+            <div className="p-drip-add p-drip-add--static">
+              Nenhum momento com esses filtros.
             </div>
-          );
-        })
-      )}
-      {moments.length > 0 && (
-        <button type="button" className="p-drip-add" onClick={onAdd}>
-          + guardar um momento que ficou com você
-        </button>
+          )}
+          {shown.map((m) => {
+            const item = items.find((i) => i.id === m.itemId);
+            if (!item) return null;
+            return (
+              <MomentCard
+                key={m.id}
+                moment={m}
+                item={item}
+                onEdit={onEditMoment}
+                onDelete={onDeleteMoment}
+              />
+            );
+          })}
+          <button type="button" className="p-drip-add" onClick={onAdd}>
+            + guardar um momento que ficou com você
+          </button>
+        </>
       )}
     </div>
   );

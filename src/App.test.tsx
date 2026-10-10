@@ -148,4 +148,24 @@ describe("App", () => {
       expect(stored(key)).toEqual([]);
     }
   });
+
+  it("filters moments by work", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "momentos" }));
+    const total = stored("moments").length;
+    expect(document.querySelectorAll(".p-moment-card")).toHaveLength(total);
+
+    await user.click(
+      screen.getByRole("combobox", { name: "Filtrar por obra" }),
+    );
+    await user.click(screen.getByRole("option", { name: "Berserk" }));
+    const berserk = stored("moments").filter(
+      (m: { itemId: number }) => m.itemId === 1,
+    ).length;
+    expect(document.querySelectorAll(".p-moment-card")).toHaveLength(berserk);
+
+    await user.click(screen.getByRole("button", { name: "limpar filtros" }));
+    expect(document.querySelectorAll(".p-moment-card")).toHaveLength(total);
+  });
 });

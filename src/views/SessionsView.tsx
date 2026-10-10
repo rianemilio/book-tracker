@@ -1,7 +1,8 @@
+import { useState } from "react";
 import type { MediaItem, Session } from "../types";
-import ConfirmButton from "../components/ui/ConfirmButton";
-import { Badge } from "../components/ui/UIHelpers";
-import { formatDate } from "../utils/date";
+import { NO_FILTER, matchesFilter } from "../utils/filters";
+import JournalFilters from "../components/journal/JournalFilters";
+import SessionCard from "../components/journal/SessionCard";
 
 interface SessionsViewProps {
   items: MediaItem[];
@@ -18,8 +19,9 @@ export default function SessionsView({
   onEditSession,
   onDeleteSession,
 }: SessionsViewProps) {
+  const [filter, setFilter] = useState(NO_FILTER);
   // Sessões novas entram no fim da lista; aqui a mais recente vem primeiro
-  const newestFirst = [...sessions].reverse();
+  const shown = sessions.filter((s) => matchesFilter(s, filter)).reverse();
 
   return (
     <div>
@@ -35,46 +37,34 @@ export default function SessionsView({
         )}
       </div>
 
-      {newestFirst.length === 0 ? (
+      {sessions.length === 0 ? (
         <div className="p-drip-add p-drip-add--static">
           Nenhuma sessão registrada ainda. Use "Registrar Sessão" depois de ler
           ou assistir algo.
         </div>
       ) : (
-        newestFirst.map((s) => {
-          const item = items.find((i) => i.id === s.itemId);
-          if (!item) return null;
-          return (
-            <div key={s.id} className="p-moment-card" data-type={item.type}>
-              <div className="p-moment-inner">
-                <div className="p-moment-head">
-                  <Badge type={item.type} />
-                  <span className="p-moment-title">{item.title}</span>
-                  <button
-                    className="p-ctrl-edit p-ctrl-edit--plain"
-                    onClick={() => onEditSession(s)}
-                  >
-                    editar
-                  </button>
-                  <ConfirmButton
-                    className="p-ctrl-edit p-ctrl-edit--plain p-ctrl-edit--next"
-                    onConfirm={() => onDeleteSession(s.id)}
-                  >
-                    excluir
-                  </ConfirmButton>
-                </div>
-                {s.note && <div className="p-quote-text">"{s.note}"</div>}
-                <div className="p-moment-meta">
-                  <span className="p-meta-sym">{s.sym}</span>
-                  <span className="p-meta-txt">
-                    {s.mood} · {s.ctx}
-                    {s.createdAt && <> · {formatDate(s.createdAt)}</>}
-                  </span>
-                </div>
-              </div>
+        <>
+          <JournalFilters items={items} value={filter} onChange={setFilter} />
+
+          {shown.length === 0 && (
+            <div className="p-drip-add p-drip-add--static">
+              Nenhuma sessão com esses filtros.
             </div>
-          );
-        })
+          )}
+          {shown.map((s) => {
+            const item = items.find((i) => i.id === s.itemId);
+            if (!item) return null;
+            return (
+              <SessionCard
+                key={s.id}
+                session={s}
+                item={item}
+                onEdit={onEditSession}
+                onDelete={onDeleteSession}
+              />
+            );
+          })}
+        </>
       )}
     </div>
   );

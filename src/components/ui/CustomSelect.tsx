@@ -9,12 +9,15 @@ interface CustomSelectProps<T> {
   value: T;
   options: Option<T>[];
   onChange: (value: T) => void;
+  // Nome acessível quando não há <label> visível ao lado
+  label?: string;
 }
 
 export default function CustomSelect<T extends string | number>({
   value,
   options,
   onChange,
+  label,
 }: CustomSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -100,6 +103,7 @@ export default function CustomSelect<T extends string | number>({
         type="button"
         className="p-custom-select-trigger"
         role="combobox"
+        aria-label={label}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-controls={listId}
