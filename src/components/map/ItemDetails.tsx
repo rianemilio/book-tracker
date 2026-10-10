@@ -7,6 +7,7 @@ interface ItemDetailsProps {
   items: MediaItem[];
   connections: Connection[];
   moments: Moment[];
+  onEditConnection: (connection: Connection) => void;
   onDeleteConnection: (id: string) => void;
 }
 
@@ -16,6 +17,7 @@ export default function ItemDetails({
   items,
   connections,
   moments,
+  onEditConnection,
   onDeleteConnection,
 }: ItemDetailsProps) {
   const links = connections.flatMap((c) => {
@@ -42,6 +44,14 @@ export default function ItemDetails({
               data-type={other.type}
             >
               {other.title} - {connection.reason}
+              <button
+                className="p-del-conn"
+                title="Editar conexão"
+                aria-label="Editar conexão"
+                onClick={() => onEditConnection(connection)}
+              >
+                ✎
+              </button>
               <ConfirmButton
                 className="p-del-conn"
                 title="Excluir conexão"

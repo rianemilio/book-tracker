@@ -104,6 +104,7 @@ export default function App() {
             moments={moments}
             connections={connections}
             onAddConnection={library.addConnection}
+            onUpdateConnectionReason={library.updateConnectionReason}
             onDeleteConnection={library.deleteConnection}
           />
         )}

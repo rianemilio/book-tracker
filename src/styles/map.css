@@ -164,6 +164,16 @@
   text-decoration: underline;
 }
 
+/* Par de obras fixo ao editar uma conexão */
+.p-conn-pair {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+}
+
 .p-conn-empty {
   color: var(--muted);
   font-size: 12px;

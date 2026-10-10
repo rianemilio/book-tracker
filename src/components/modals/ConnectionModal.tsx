@@ -7,6 +7,8 @@ import Modal from "../ui/Modal";
 interface ConnectionModalProps {
   items: MediaItem[];
   connections: Connection[];
+  // Conexão existente = edição; só o motivo pode mudar
+  connection?: Connection | null;
   onSave: (data: { fromId: number; toId: number; reason: string }) => void;
   onClose: () => void;
 }
@@ -14,15 +16,22 @@ interface ConnectionModalProps {
 export default function ConnectionModal({
   items,
   connections,
+  connection,
   onSave,
   onClose,
 }: ConnectionModalProps) {
-  const [fromId, setFromId] = useState<number>(items[0]?.id || 0);
-  const [toId, setToId] = useState<number>(items[1]?.id || 0);
-  const [reason, setReason] = useState("");
+  const [fromId, setFromId] = useState<number>(
+    connection?.fromId ?? (items[0]?.id || 0),
+  );
+  const [toId, setToId] = useState<number>(
+    connection?.toId ?? (items[1]?.id || 0),
+  );
+  const [reason, setReason] = useState(connection?.reason ?? "");
 
-  const duplicate = isConnected(connections, fromId, toId);
+  const duplicate = !connection && isConnected(connections, fromId, toId);
   const ok = fromId && toId && fromId !== toId && !duplicate && reason.trim();
+
+  const titleOf = (id: number) => items.find((i) => i.id === id)?.title;
 
   const itemOptions = items.map((item) => ({
     value: item.id,
@@ -30,20 +39,32 @@ export default function ConnectionModal({
   }));
 
   return (
-    <Modal eyebrow="vincular ideias" title="Nova Conexão" onClose={onClose}>
-      <label className="p-field-label">Obra Origem</label>
-      <CustomSelect
-        value={fromId}
-        options={itemOptions}
-        onChange={(val) => setFromId(Number(val))}
-      />
+    <Modal
+      eyebrow="vincular ideias"
+      title={connection ? "Editar Conexão" : "Nova Conexão"}
+      onClose={onClose}
+    >
+      {connection ? (
+        <p className="p-conn-pair">
+          {titleOf(fromId)} <span aria-hidden="true">↔</span> {titleOf(toId)}
+        </p>
+      ) : (
+        <>
+          <label className="p-field-label">Obra Origem</label>
+          <CustomSelect
+            value={fromId}
+            options={itemOptions}
+            onChange={(val) => setFromId(Number(val))}
+          />
 
-      <label className="p-field-label">Obra Destino</label>
-      <CustomSelect
-        value={toId}
-        options={itemOptions}
-        onChange={(val) => setToId(Number(val))}
-      />
+          <label className="p-field-label">Obra Destino</label>
+          <CustomSelect
+            value={toId}
+            options={itemOptions}
+            onChange={(val) => setToId(Number(val))}
+          />
+        </>
+      )}
 
       <label className="p-field-label">Motivo do vínculo / Paralelo</label>
       <textarea
@@ -65,7 +86,7 @@ export default function ConnectionModal({
         disabled={!ok}
         onClick={() => ok && onSave({ fromId, toId, reason: reason.trim() })}
       >
-        Criar Conexão
+        {connection ? "Salvar Alterações" : "Criar Conexão"}
       </button>
     </Modal>
   );

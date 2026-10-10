@@ -12,6 +12,7 @@ interface MapViewProps {
   moments: Moment[];
   connections: Connection[];
   onAddConnection: (data: ConnectionInput) => void;
+  onUpdateConnectionReason: (id: string, reason: string) => void;
   onDeleteConnection: (id: string) => void;
 }
 
@@ -20,11 +21,15 @@ export default function MapView({
   moments,
   connections,
   onAddConnection,
+  onUpdateConnectionReason,
   onDeleteConnection,
 }: MapViewProps) {
   const [selId, setSelId] = useState<number | undefined>(items[0]?.id);
   const selected = items.find((i) => i.id === selId) ?? items[0];
-  const [showConnModal, setShowConnModal] = useState(false);
+  // null = conexão nova
+  const [connModal, setConnModal] = useState<{
+    connection: Connection | null;
+  } | null>(null);
   const compact = useMediaQuery("(max-width: 600px)");
 
   return (
@@ -34,19 +39,27 @@ export default function MapView({
           <span className="p-section-label">mapa de conexões</span>
           <div className="p-section-line" />
         </div>
-        <button className="p-ghost-btn" onClick={() => setShowConnModal(true)}>
+        <button
+          className="p-ghost-btn"
+          onClick={() => setConnModal({ connection: null })}
+        >
           + Vincular ideias
         </button>
       </div>
 
-      {showConnModal && (
+      {connModal && (
         <ConnectionModal
           items={items}
           connections={connections}
-          onClose={() => setShowConnModal(false)}
+          connection={connModal.connection}
+          onClose={() => setConnModal(null)}
           onSave={(data) => {
-            onAddConnection(data);
-            setShowConnModal(false);
+            if (connModal.connection) {
+              onUpdateConnectionReason(connModal.connection.id, data.reason);
+            } else {
+              onAddConnection(data);
+            }
+            setConnModal(null);
           }}
         />
       )}
@@ -72,6 +85,7 @@ export default function MapView({
               items={items}
               connections={connections}
               moments={moments}
+              onEditConnection={(connection) => setConnModal({ connection })}
               onDeleteConnection={onDeleteConnection}
             />
           )}

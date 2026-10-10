@@ -92,6 +92,11 @@ export function useLibrary() {
         : [...prev, { ...data, id: randomId("c") }],
     );
 
+  const updateConnectionReason = (id: string, reason: string) =>
+    setConnections((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, reason } : c)),
+    );
+
   const deleteConnection = (id: string) =>
     setConnections((prev) => prev.filter((c) => c.id !== id));
 
@@ -160,6 +165,7 @@ export function useLibrary() {
     saveItem,
     deleteItem,
     addConnection,
+    updateConnectionReason,
     deleteConnection,
     addMoment,
     updateMoment,
