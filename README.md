@@ -2,6 +2,11 @@
 
 Diário de leituras e sessões para livros, filmes/séries e mangás/HQs. Registre o progresso de cada obra, o humor e o contexto de cada sessão, guarde os momentos que marcaram e ligue obras entre si num mapa de conexões temáticas.
 
+**[Abrir o app →](https://rianemilio.github.io/book-tracker/)**
+
+<!-- Print da tela: salve a imagem em docs/screenshot.png e descomente a linha abaixo -->
+<!-- ![Tela inicial do Páginas & Cenas](docs/screenshot.png) -->
+
 Os dados ficam no `localStorage` do navegador. Não há backend. Pelo link "seus dados · backup", no rodapé, dá pra exportar tudo num arquivo JSON, importar um backup ou começar do zero.
 
 ## Stack
