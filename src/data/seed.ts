@@ -90,7 +90,7 @@ export const INIT_MOMENTS: Moment[] = [
     id: 103,
     itemId: 4,
     ref: "p. 187",
-    text: "A tempestade não é algo que você atravessa. Você é a tempestade.",
+    text: "Kafka sozinho na biblioteca, e a sensação de que fugir de casa é, no fundo, ir ao encontro de si mesmo.",
     mood: "inspirado",
     sym: "★",
     ctx: "no metrô",
